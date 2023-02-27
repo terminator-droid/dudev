@@ -4,31 +4,43 @@ package com.dudev.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "userLikedProducts")
+@EqualsAndHashCode(exclude = "userLikedProducts")
 @Builder
 @Entity
 @Table(name = "users", schema = "public")
-public class User {
+public class User extends BaseEntity<Integer> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(nullable = false)
     private String fullName;
+    @Column(nullable = false)
     private String phoneNumber;
+    @Column(nullable = false, unique = true)
     private String password;
     private String address;
-    private Role role;
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<UserLikedProduct> userLikedProducts = new ArrayList<>();
 }

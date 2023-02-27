@@ -1,127 +1,100 @@
-create table public.categories
+CREATE TABLE IF NOT EXISTS categories
 (
-    id   BIGSERIAL PRIMARY KEY,
-    name VARCHAR(32)
+    id   SERIAL PRIMARY KEY,
+    name VARCHAR(32) NOT NULL
 );
 
-create table public.change_types
+CREATE TABLE IF NOT EXISTS
+    change_types
 (
-    change_type BIGSERIAL PRIMARY KEY,
+    id          SERIAL PRIMARY KEY,
     description VARCHAR(64) NOT NULL
 );
 
-create table public.brands
+CREATE TABLE IF NOT EXISTS
+    brands
 (
-    id       BIGSERIAL PRIMARY KEY,
-    name     VARCHAR(32),
-    category INTEGER,
-    foreign key (category) references public.categories (id)
-        match simple on update no action on delete no action
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(32) NOT NULL,
+    category_id INTEGER REFERENCES categories (id)
 );
 
-create table public.users
+CREATE TABLE IF NOT EXISTS
+    users
 (
-    id           BIGSERIAL PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     full_name    VARCHAR(32) NOT NULL,
     phone_number VARCHAR(32) NOT NULL,
     password     VARCHAR(16) NOT NULL,
     address      VARCHAR(64),
     role         VARCHAR(16) NOT NULL,
-    username     VARCHAR(32)
+    username     VARCHAR(32) NOT NULL
 );
 
-create table public.guitars
+CREATE TABLE IF NOT EXISTS products
 (
-    id               BIGSERIAL PRIMARY KEY,
-    model            VARCHAR(32)      NOT NULL,
-    description      TEXT             NOT NULL,
-    year             INTEGER          NOT NULL,
-    country          VARCHAR(32)      NOT NULL,
+    id             SERIAL PRIMARY KEY,
+    category_id    INTEGER REFERENCES categories (id),
+    description    TEXT             NOT NULL,
+    media_name     VARCHAR(1024),
+    timestamp      TIMESTAMP,
+    user_id        INTEGER          NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    price          DOUBLE PRECISION NOT NULL,
+    brand_id       INTEGER          NOT NULL REFERENCES brands (id),
+    closed         BOOLEAN DEFAULT FALSE,
+    change_type_id INTEGER          NOT NULL REFERENCES change_types (id),
+    change_value   DOUBLE PRECISION,
+    change_wish    VARCHAR(32)
+);
+
+CREATE TABLE IF NOT EXISTS
+    guitars
+(
+    id               SERIAL PRIMARY KEY REFERENCES products (id) ON DELETE CASCADE,
+    model            VARCHAR(32) NOT NULL,
+    year             INTEGER     NOT NULL,
+    country          VARCHAR(32) NOT NULL,
     pick_ups         VARCHAR(32),
-    fingerboard_wood VARCHAR(32),
-    media_name       VARCHAR(1024),
-    timestamp        timestamp without time zone,
-    user_id          INTEGER          NOT NULL,
-    price            DOUBLE PRECISION NOT NULL,
-    brand            INTEGER          NOT NULL,
-    is_closed        BOOLEAN default false,
-    change_type      INTEGER          NOT NULL,
-    change_value     DOUBLE PRECISION,
-    change_wish      VARCHAR(32),
-    foreign key (change_type) references public.change_types (change_type)
-        match simple on update no action on delete no action,
-    foreign key (brand) references public.brands (id)
-        match simple on update no action on delete no action,
-    foreign key (user_id) references public.users (id)
-        match simple on update no action on delete no action
-);
-create table public.offers
-(
-    id           BIGSERIAL PRIMARY KEY,
-    buyer        INTEGER,
-    seller       INTEGER,
-    change_type  INTEGER,
-    change_value DOUBLE PRECISION,
-    timestamp    timestamp without time zone,
-    accepted     BOOLEAN default false,
-    foreign key (buyer) references public.users (id)
-        match simple on update no action on delete no action,
-    foreign key (change_type) references public.change_types (change_type)
-        match simple on update no action on delete no action
+    fingerboard_wood VARCHAR(32)
+
 );
 
-create table public.offers_products
+CREATE TABLE IF NOT EXISTS
+    pedals
 (
-    offer_id         INTEGER NOT NULL,
-    product_id       INTEGER NOT NULL,
-    owner            INTEGER,
-    product_category INTEGER NOT NULL,
-    foreign key (owner) references public.users (id),
-    foreign key (offer_id) references public.offers (id)
-        match simple on update no action on delete no action
+    id         SERIAL PRIMARY KEY REFERENCES products (id) ON DELETE CASCADE,
+    model      VARCHAR(32) NOT NULL,
+    shop_price DOUBLE PRECISION
 );
 
-create table public.brands
+CREATE TABLE IF NOT EXISTS
+    offers
 (
-    id       BIGSERIAL PRIMARY KEY,
-    name     VARCHAR(32),
-    category INTEGER,
-    foreign key (category) references public.categories (id)
-        match simple on update no action on delete no action
+    id             SERIAL PRIMARY KEY,
+    buyer_id       INTEGER REFERENCES users (id)        NOT NULL,
+    seller_id      INTEGER REFERENCES users (id)        NOT NULL,
+    change_type_id INTEGER REFERENCES change_types (id) NOT NULL,
+    change_value   DOUBLE PRECISION,
+    timestamp      TIMESTAMP                            NOT NULL,
+    accepted       BOOLEAN DEFAULT FALSE
 );
 
-create table public.pedals
+CREATE TABLE IF NOT EXISTS
+    offers_products
 (
-    id           BIGSERIAL PRIMARY KEY,
-    model        VARCHAR(32)                 NOT NULL,
-    description  text                        NOT NULL,
-    media_name   VARCHAR(1024),
-    timestamp    timestamp without time zone NOT NULL,
-    user_id      INTEGER                     NOT NULL,
-    price        DOUBLE PRECISION            NOT NULL,
-    brand        INTEGER                     NOT NULL,
-    is_closed    BOOLEAN default false,
-    change_type  INTEGER                     NOT NULL,
-    change_value DOUBLE PRECISION,
-    change_wish  VARCHAR(32),
-    foreign key (change_type) references public.change_types (change_type)
-        match simple on update no action on delete no action,
-    foreign key (brand) references public.brands (id)
-        match simple on update no action on delete no action,
-    foreign key (user_id) references public.users (id)
-        match simple on update no action on delete no action
+    id         SERIAL PRIMARY KEY,
+    offer_id   INTEGER   NOT NULL REFERENCES offers (id) ON DELETE CASCADE,
+    product_id INTEGER   NOT NULL REFERENCES products (id) ON DELETE CASCADE,
+    created_at TIMESTAMP NOT NULL
 );
 
-
-create table public.users_liked_products
+CREATE TABLE IF NOT EXISTS
+    users_liked_products
 (
-    user_id  INTEGER NOT NULL,
-    product  INTEGER NOT NULL,
-    category INTEGER NOT NULL,
-    foreign key (category) references public.categories (id)
-        match simple on update no action on delete no action,
-    foreign key (user_id) references public.users (id)
-        match simple on update no action on delete no action
+    id         SERIAL PRIMARY KEY,
+    user_id    INTEGER   NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    product_id INTEGER   NOT NULL REFERENCES products (id) ON DELETE CASCADE,
+    created_at TIMESTAMP NOT NULL
 );
 
 
