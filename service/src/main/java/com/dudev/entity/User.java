@@ -12,16 +12,26 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedEntityGraph(name = "withUserProducts",
+        attributeNodes = {
+                @NamedAttributeNode(value = "userProducts", subgraph = "withBrandAndChangeType")
+        }, subgraphs = {
+        @NamedSubgraph(name = "withBrandAndChangeType", attributeNodes = {@NamedAttributeNode("brand"), @NamedAttributeNode("changeType")})
+}
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "userLikedProducts")
-@EqualsAndHashCode(exclude = "userLikedProducts")
+@ToString(exclude = {"userLikedProducts", "userProducts"})
+@EqualsAndHashCode(exclude = {"userLikedProducts", "userProducts"})
 @Builder
 @Entity
 @Table(name = "users", schema = "public")
@@ -43,4 +53,8 @@ public class User extends BaseEntity<Integer> {
     @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserLikedProduct> userLikedProducts = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<Product> userProducts = new ArrayList<>();
 }

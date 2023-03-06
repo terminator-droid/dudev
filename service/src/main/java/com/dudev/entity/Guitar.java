@@ -21,9 +21,22 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "guitars")
+@Table(name = "guitar")
 @PrimaryKeyJoinColumn(name = "id")
 public class Guitar extends Product{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(nullable = false)
+    private String model;
+
+    private int year;
+
+    private String country;
+    private String pickUps;
+    private String wood;
 
     @Builder(builderMethodName = "guitarBuilder")
     public Guitar(Category category, Brand brand, ChangeType changeType, double changeValue, String changeWish, User user, String media, LocalDateTime timestamp, double price, boolean closed, String description, List<UserLikedProduct> userLikedProducts, List<OfferProduct> offerProducts, Integer id, String model, int year, String country, String pickUps, String wood) {
@@ -35,17 +48,4 @@ public class Guitar extends Product{
         this.pickUps = pickUps;
         this.wood = wood;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(nullable = false)
-    private String model;
-
-    private int year;
-    private String country;
-    private String pickUps;
-    private String wood;
-
 }

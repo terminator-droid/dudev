@@ -10,17 +10,27 @@ import static com.dudev.util.EntityGenerator.getGuitar;
 import static com.dudev.util.EntityGenerator.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GuitarIT extends TransactionManagementTestBase {
+class GuitarIT extends TransactionManagementTestBase {
 
     @Test
-    public void save() {
-        Guitar guitar = saveGuitar();
+    void save() {
+        User user = getUser();
+        Category category = getCategory();
+        ChangeType changeType = getChangeType();
+        Brand brand = getBrand(category);
+        Guitar guitar = getGuitar(category, changeType, brand, user);
+
+        session.save(category);
+        session.save(brand);
+        session.save(user);
+        session.save(changeType);
+        session.save(guitar);
 
         assertThat(guitar.getId()).isNotNull();
     }
 
     @Test
-    public void get() {
+    void get() {
         Guitar guitar = saveGuitar();
         session.clear();
         Guitar actualGuitar = session.get(Guitar.class, guitar.getId());
@@ -29,7 +39,7 @@ public class GuitarIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void update() {
+    void update() {
         Guitar initialGuitar = saveGuitar();
         session.clear();
 
@@ -43,7 +53,7 @@ public class GuitarIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Guitar initialGuitar = saveGuitar();
         session.clear();
 
@@ -54,7 +64,7 @@ public class GuitarIT extends TransactionManagementTestBase {
         assertThat(deletedGuitar).isNull();
     }
 
-    private Guitar saveGuitar() {
+    Guitar saveGuitar() {
         User user = getUser();
         Category category = getCategory();
         ChangeType changeType = getChangeType();

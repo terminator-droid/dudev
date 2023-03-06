@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import static com.dudev.util.EntityGenerator.getChangeType;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ChangeTypeIT extends TransactionManagementTestBase {
+class ChangeTypeIT extends TransactionManagementTestBase {
 
     @Test
-    public void save() {
+    void save() {
         ChangeType changeType = getChangeType();
 
         session.save(changeType);
@@ -18,7 +18,7 @@ public class ChangeTypeIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void get() {
+    void get() {
         ChangeType changeType = getChangeType();
 
         session.save(changeType);
@@ -29,7 +29,7 @@ public class ChangeTypeIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void update() {
+    void update() {
         ChangeType initialChangeType = getChangeType();
 
         session.save(initialChangeType);
@@ -45,7 +45,7 @@ public class ChangeTypeIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         ChangeType initialChangeType = getChangeType();
 
         session.save(initialChangeType);

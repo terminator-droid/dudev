@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import static com.dudev.util.EntityGenerator.getCategory;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CategoryIT extends TransactionManagementTestBase {
+class CategoryIT extends TransactionManagementTestBase {
 
     @Test
-    public void save() {
+    void save() {
         Category category = getCategory();
 
         session.save(category);
@@ -19,7 +19,7 @@ public class CategoryIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void get() {
+    void get() {
         Category category = getCategory();
 
         session.save(category);
@@ -30,7 +30,7 @@ public class CategoryIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void update() {
+    void update() {
         Category initialCategory = getCategory();
 
         session.save(initialCategory);
@@ -46,7 +46,7 @@ public class CategoryIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Category initialCategory = getCategory();
 
         session.save(initialCategory);

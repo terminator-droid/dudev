@@ -15,19 +15,41 @@ import static com.dudev.util.EntityGenerator.getProduct;
 import static com.dudev.util.EntityGenerator.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OfferProductIT extends TransactionManagementTestBase {
+class OfferProductIT extends TransactionManagementTestBase {
 
     @Test
-    public void save() {
-        OfferProduct offerProduct = saveOfferProduct();
+    void save() {
+        ChangeType changeType = getChangeType();
+        User buyer = getUser();
+        User seller = User.builder()
+                .username("Gosling333")
+                .role(USER)
+                .fullName("Ryan Gosling")
+                .password("second_password")
+                .phoneNumber("8920-122-22-23")
+                .build();
+        Offer offer = getOffer(buyer, seller, changeType);
+        Category category = getCategory();
+        Brand brand = getBrand(category);
+        Product product = getProduct(category, changeType, brand, buyer);
+        OfferProduct offerProduct = getOfferProduct();
+        offerProduct.setProduct(product);
+        offerProduct.setOffer(offer);
+        session.save(category);
+        session.save(brand);
+        session.save(changeType);
+        session.save(seller);
+        session.save(buyer);
+        session.save(offer);
+        session.save(product);
+
+        session.save(offerProduct);
 
         assertThat(offerProduct.getId()).isNotNull();
     }
 
     @Test
-    public void get() {
-
-
+    void get() {
         OfferProduct offerProduct = saveOfferProduct();
         session.clear();
 
@@ -37,7 +59,7 @@ public class OfferProductIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void update() {
+    void update() {
         OfferProduct initialOfferProduct = saveOfferProduct();
         session.clear();
 
@@ -51,7 +73,7 @@ public class OfferProductIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         OfferProduct offerProduct = saveOfferProduct();
         session.clear();
 

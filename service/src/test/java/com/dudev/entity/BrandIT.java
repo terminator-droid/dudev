@@ -7,26 +7,31 @@ import static com.dudev.util.EntityGenerator.getBrand;
 import static com.dudev.util.EntityGenerator.getCategory;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BrandIT extends TransactionManagementTestBase {
+class BrandIT extends TransactionManagementTestBase {
 
     @Test
-    public void save() {
-        Brand brand = saveBrand();
+    void save() {
+        Category category = getCategory();
+        Brand brand = getBrand(category);
+
+        session.save(category);
+        session.save(brand);
 
         assertThat(brand.getId()).isNotNull();
     }
 
     @Test
-    public void get() {
+    void get() {
         Brand brand = saveBrand();
         session.clear();
+
         Brand actualBrand = session.get(Brand.class, brand.getId());
 
         assertThat(actualBrand).isEqualTo(brand);
     }
 
     @Test
-    public void update() {
+    void update() {
         Brand initialBrand = saveBrand();
         session.clear();
         initialBrand.setName("Gibson");
@@ -40,7 +45,7 @@ public class BrandIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Brand brand = saveBrand();
         session.clear();
 

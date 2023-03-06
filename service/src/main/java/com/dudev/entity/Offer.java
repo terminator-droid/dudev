@@ -24,9 +24,8 @@ import java.util.List;
 @ToString(exclude = "offerProducts")
 @EqualsAndHashCode(exclude = "offerProducts")
 @Entity
-@Table(name = "offers")
+@Table(name = "offer")
 public class Offer extends BaseEntity<Integer> {
-
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "buyer_id")

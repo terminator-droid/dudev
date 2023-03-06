@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "offers_products")
+@Table(name = "offer_product")
 public class OfferProduct extends BaseEntity<Integer> {
 
     @ManyToOne

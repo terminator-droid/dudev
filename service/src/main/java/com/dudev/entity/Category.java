@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "categories")
+@Table(name = "category")
 public class Category extends BaseEntity<Integer>{
 
     private String name;
