@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = "products")
 @EqualsAndHashCode(exclude = "products")
-@Builder
+@SuperBuilder
 @Entity
 @Table(name = "change_type")
 public class ChangeType extends BaseEntity<Integer>{

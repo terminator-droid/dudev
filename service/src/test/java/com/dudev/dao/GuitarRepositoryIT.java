@@ -1,10 +1,14 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.RepositoryTestBase;
 import com.dudev.dto.GuitarFilter;
+import com.dudev.entity.Brand;
+import com.dudev.entity.Category;
+import com.dudev.entity.ChangeType;
 import com.dudev.entity.Guitar;
 
-import org.hibernate.Session;
+import com.dudev.entity.Product;
+import com.dudev.entity.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,21 +19,56 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.dudev.util.EntityGenerator.*;
+import static com.dudev.util.EntityGenerator.getBrand;
+import static com.dudev.util.EntityGenerator.getCategory;
+import static com.dudev.util.EntityGenerator.getChangeType;
+import static com.dudev.util.EntityGenerator.getGuitar;
+import static com.dudev.util.EntityGenerator.getUser;
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class GuitarDaoIT extends TransactionManagementTestBase {
+public class GuitarRepositoryIT extends RepositoryTestBase<Integer, Guitar> {
 
-    private static GuitarDao guitarDao = GuitarDao.getInstance();
+    static GuitarRepository guitarRepository;
+
+    public GuitarRepositoryIT() {
+        super(guitarRepository, getEntity());
+    }
+
+    public static Guitar getEntity() {
+        User user = getUser();
+        Category category = getCategory();
+        ChangeType changeType = getChangeType();
+        Brand brand = getBrand(category);
+        Guitar guitar = getGuitar(category, changeType, brand, user);
+
+        session.beginTransaction();
+        session.save(user);
+        session.save(category);
+        session.save(brand);
+        session.save(changeType);
+        session.getTransaction().commit();
+        return guitar;
+    }
+
+//    public static List<Guitar> getEntities() {
+//        List<User> users = getUsers();
+//        List<ChangeType> changeTypes = getChangeTypes();
+//        List<Category> categories = getCategories();
+//        List<Brand> brands = getBrands(categories);
+//        List<Guitar> entities = (List<Guitar>) (Guitar) getProducts(users, changeTypes, categories, brands).stream().filter(it ->  it instanceof Guitar).toList();
+//        return entities;
+//
+//    }
 
     @BeforeAll
     static void entitiesInit() {
-        Session session = sessionFactory.openSession();
+        guitarRepository = new GuitarRepository(session);
         session.beginTransaction();
         insertEntities(session);
         session.getTransaction().commit();
-        session.close();
     }
 
     @Nested
@@ -37,7 +76,7 @@ public class GuitarDaoIT extends TransactionManagementTestBase {
 
         @Test
         void findAllGuitars() {
-            List<Guitar> guitars = guitarDao.findAllGuitarsQueryDsl(session);
+            List<Guitar> guitars = guitarRepository.findAllGuitarsQueryDsl(session);
 
             assertThat(guitars.size()).isEqualTo(4);
         }
@@ -45,9 +84,9 @@ public class GuitarDaoIT extends TransactionManagementTestBase {
         @ParameterizedTest
         @MethodSource("getGuitarFilters")
         void findGuitarsByPredicates(GuitarFilter filter, Object result) {
-            List<Guitar> guitarsByPredicates = guitarDao.findAllGuitarsByPredicatesQueryDsl(session, filter);
+            List<Guitar> guitarsByPredicates = guitarRepository.findAllGuitarsByPredicatesQueryDsl(session, filter);
 
-            if (filter.getYear() != 0) {
+            if (filter.getYear() != null) {
                 guitarsByPredicates
                         .forEach(it -> assertThat(it.getYear()).isEqualTo(result));
             }
@@ -108,7 +147,7 @@ public class GuitarDaoIT extends TransactionManagementTestBase {
     class CriteriaApi {
         @Test
         void findAllGuitars() {
-            List<Guitar> allGuitars = guitarDao.findAllGuitarsCriteria(session);
+            List<Guitar> allGuitars = guitarRepository.findAllGuitarsCriteria(session);
 
             assertThat(allGuitars.size()).isEqualTo(4);
         }
@@ -116,9 +155,9 @@ public class GuitarDaoIT extends TransactionManagementTestBase {
         @ParameterizedTest
         @MethodSource("getGuitarFilters")
         void findGuitarsByPredicates(GuitarFilter filter, Object result) {
-            List<Guitar> guitarsByPredicates = guitarDao.findGuitarsByPredicatesCriteria(session, filter);
+            List<Guitar> guitarsByPredicates = guitarRepository.findGuitarsByPredicatesCriteria(session, filter);
 
-            if (filter.getYear() != 0) {
+            if (filter.getYear() != null) {
                 guitarsByPredicates
                         .forEach(it -> assertThat(it.getYear()).isEqualTo(result));
             }

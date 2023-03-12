@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.Session;
 import org.hibernate.graph.GraphSemantic;
 
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -20,9 +21,12 @@ import static com.dudev.entity.QGuitar.guitar;
 import static com.dudev.util.EntityGraphUtil.withBrandAndChangeType;
 
 
-public class GuitarDao {
+public class GuitarRepository extends RepositoryBase<Integer, Guitar> {
 
-    private static final GuitarDao INSTANCE = new GuitarDao();
+
+    public GuitarRepository(EntityManager entityManager) {
+        super(entityManager, Guitar.class);
+    }
 
     public List<Guitar> findAllGuitarsByPredicatesQueryDsl(Session session, GuitarFilter filter) {
         com.querydsl.core.types.Predicate predicate = QPredicate.builder()
@@ -63,36 +67,19 @@ public class GuitarDao {
         CriteriaQuery<Guitar> criteria = cb.createQuery(Guitar.class);
         Root<Guitar> guitar = criteria.from(Guitar.class);
 
-        List<Predicate> predicates = new ArrayList<>();
-        if (guitarFilter.getChangeType() != null) {
-            predicates.add(cb.equal(guitar.get(Guitar_.CHANGE_TYPE).get(ChangeType_.DESCRIPTION), guitarFilter.getChangeType()));
-        }
-        if (guitarFilter.getChangeWish() != null) {
-            predicates.add(cb.like(guitar.get(Guitar_.CHANGE_WISH), guitarFilter.getChangeWish()));
-        }
-        if (guitarFilter.getBrand() != null) {
-            predicates.add(cb.equal(guitar.get(Guitar_.BRAND).get(Brand_.NAME), guitarFilter.getBrand()));
-        }
-        if (guitarFilter.getYear() != 0) {
-            predicates.add(cb.equal(guitar.get(Guitar_.YEAR), guitarFilter.getYear()));
-        }
-        if (guitarFilter.getCountry() != null) {
-            predicates.add(cb.equal(guitar.get(Guitar_.COUNTRY), guitarFilter.getCountry()));
-        }
-        if (guitarFilter.getModel() != null) {
-            predicates.add(cb.equal(guitar.get(Guitar_.MODEL), guitarFilter.getModel()));
-        }
-
-        predicates.add(cb.equal(guitar.get(Guitar_.CLOSED), guitarFilter.isClosed()));
-
+        Predicate[] predicates = QPredicateCriteria.builder()
+                .add(guitar.get(Guitar_.CHANGE_TYPE).get(ChangeType_.DESCRIPTION), it -> cb.equal(it, guitarFilter.getChangeType()))
+                .add(guitar.get(Guitar_.BRAND).get(Brand_.NAME), it -> cb.equal(it, guitarFilter.getBrand()))
+                .add(guitar.get(Guitar_.CHANGE_WISH), it -> cb.equal(it, guitarFilter.getChangeWish()))
+                .add(guitar.get(Guitar_.YEAR), it -> cb.equal(it, guitarFilter.getYear()))
+                .add(guitar.get(Guitar_.COUNTRY), it -> cb.equal(it, guitarFilter.getCountry()))
+                .add(guitar.get(Guitar_.MODEL), it -> cb.equal(it, guitarFilter.getModel()))
+                .add(guitar.get(Guitar_.CLOSED), it -> cb.equal(it, guitarFilter.getClosed()))
+                .build();
 
         criteria.select(guitar)
-                .where(predicates.toArray(Predicate[]::new));
+                .where(predicates);
 
         return session.createQuery(criteria).list();
-    }
-
-    public static GuitarDao getInstance() {
-        return INSTANCE;
     }
 }

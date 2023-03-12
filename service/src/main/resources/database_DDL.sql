@@ -1,14 +1,16 @@
 CREATE TABLE IF NOT EXISTS category
 (
     id   SERIAL PRIMARY KEY,
-    name VARCHAR(32) NOT NULL
+    name VARCHAR(32) NOT NULL,
+    created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS
     change_type
 (
     id          SERIAL PRIMARY KEY,
-    description VARCHAR(64) NOT NULL
+    description VARCHAR(64) NOT NULL,
+    created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS
@@ -16,7 +18,8 @@ CREATE TABLE IF NOT EXISTS
 (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(32) NOT NULL,
-    category_id INTEGER REFERENCES category (id)
+    category_id INTEGER REFERENCES category (id),
+    created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS
@@ -25,10 +28,11 @@ CREATE TABLE IF NOT EXISTS
     id           SERIAL PRIMARY KEY,
     full_name    VARCHAR(32) NOT NULL,
     phone_number VARCHAR(32) NOT NULL,
-    password     VARCHAR(16) NOT NULL,
+    password     VARCHAR(64) NOT NULL,
     address      VARCHAR(64),
     role         VARCHAR(16) NOT NULL,
-    username     VARCHAR(32) NOT NULL
+    username     VARCHAR(32) NOT NULL,
+    created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS product
@@ -37,7 +41,7 @@ CREATE TABLE IF NOT EXISTS product
     category_id    INTEGER REFERENCES category (id),
     description    TEXT             NOT NULL,
     media_name     VARCHAR(1024),
-    timestamp      TIMESTAMP,
+    created_at      TIMESTAMP,
     user_id        INTEGER          NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     price          DOUBLE PRECISION NOT NULL,
     brand_id       INTEGER          NOT NULL REFERENCES brand (id),
@@ -55,7 +59,8 @@ CREATE TABLE IF NOT EXISTS
     year             INTEGER     NOT NULL,
     country          VARCHAR(32) NOT NULL,
     pick_ups         VARCHAR(32),
-    fingerboard_wood VARCHAR(32)
+    fingerboard_wood VARCHAR(32),
+    created_at TIMESTAMP NOT NULL
 
 );
 
@@ -64,7 +69,8 @@ CREATE TABLE IF NOT EXISTS
 (
     id         SERIAL PRIMARY KEY REFERENCES product (id) ON DELETE CASCADE,
     model      VARCHAR(32) NOT NULL,
-    shop_price DOUBLE PRECISION
+    shop_price DOUBLE PRECISION,
+    created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS
@@ -75,7 +81,7 @@ CREATE TABLE IF NOT EXISTS
     seller_id      INTEGER REFERENCES users (id)        NOT NULL,
     change_type_id INTEGER REFERENCES change_type (id) NOT NULL,
     change_value   DOUBLE PRECISION,
-    timestamp      TIMESTAMP                            NOT NULL,
+    created_at      TIMESTAMP                            NOT NULL,
     accepted       BOOLEAN DEFAULT FALSE
 );
 

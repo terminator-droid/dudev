@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +29,7 @@ import java.util.List;
 @Entity
 @Table(name = "product")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Builder
+@SuperBuilder
 public class Product extends BaseEntity<Integer> {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -41,19 +43,24 @@ public class Product extends BaseEntity<Integer> {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "change_type_id")
     private ChangeType changeType;
+
     private double changeValue;
+
     private String changeWish;
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "media_name")
     private String media;
-    @Column(nullable = false)
-    private LocalDateTime timestamp;
+
     @Column(nullable = false)
     private double price;
-    private boolean closed;
+
+    @Column(nullable = false)
+    private Boolean closed;
+
     @Column(nullable = false)
     private String description;
 

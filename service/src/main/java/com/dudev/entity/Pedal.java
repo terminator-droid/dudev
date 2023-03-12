@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import java.util.List;
 @Entity
 @Table(name = "pedal", schema = "public")
 @PrimaryKeyJoinColumn(name = "id")
+@SuperBuilder
 public class Pedal extends Product{
 
     @Id
@@ -30,13 +32,14 @@ public class Pedal extends Product{
     @Column(nullable = false)
     private String model;
 
-    private String shopPrice;
+    private Double shopPrice;
 
-    @Builder(builderMethodName = "pedalBuilder")
-    public Pedal(Category category, Brand brand, ChangeType changeType, double changeValue, String changeWish, User user, String media, LocalDateTime timestamp, double price, boolean closed, String description, List<UserLikedProduct> userLikedProducts, List<OfferProduct> offerProducts, Integer id, String model, String shopPrice) {
-        super(category, brand, changeType, changeValue, changeWish, user, media, timestamp, price, closed, description, userLikedProducts, offerProducts);
-        this.id = id;
-        this.model = model;
-        this.shopPrice = shopPrice;
-    }
+
+//    @Builder(builderMethodName = "pedalBuilder")
+//    public Pedal(Category category, Brand brand, ChangeType changeType, double changeValue, String changeWish, User user, String media, LocalDateTime timestamp, double price, boolean closed, String description, List<UserLikedProduct> userLikedProducts, List<OfferProduct> offerProducts, Integer id, String model, Double shopPrice) {
+//        super(category, brand, changeType, changeValue, changeWish, user, media, createdAt, price, closed, description, userLikedProducts, offerProducts);
+//        this.id = id;
+//        this.model = model;
+//        this.shopPrice = shopPrice;
+//    }
 }
