@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 
 public class PedalRepository extends RepositoryBase<Integer, Pedal> {
 
-    public PedalRepository(EntityManager entityManager, Class<Pedal> clazz) {
-        super(entityManager, clazz);
+    public PedalRepository(EntityManager entityManager) {
+        super(entityManager, Pedal.class);
     }
 }

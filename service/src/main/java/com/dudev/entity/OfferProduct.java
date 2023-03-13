@@ -15,7 +15,6 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

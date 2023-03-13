@@ -25,7 +25,7 @@ import java.util.List;
 @Table(name = "guitar")
 @PrimaryKeyJoinColumn(name = "id")
 @SuperBuilder
-public class Guitar extends Product{
+public class Guitar extends Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

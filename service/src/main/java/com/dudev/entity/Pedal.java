@@ -23,7 +23,7 @@ import java.util.List;
 @Table(name = "pedal", schema = "public")
 @PrimaryKeyJoinColumn(name = "id")
 @SuperBuilder
-public class Pedal extends Product{
+public class Pedal extends Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

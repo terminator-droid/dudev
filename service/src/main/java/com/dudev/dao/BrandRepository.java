@@ -6,9 +6,9 @@ import org.hibernate.SessionFactory;
 
 import javax.persistence.EntityManager;
 
-public class BrandRepository extends RepositoryBase<Integer, Brand>{
+public class BrandRepository extends RepositoryBase<Integer, Brand> {
 
-    public BrandRepository(EntityManager entityManager, Class<Brand> clazz) {
-        super(entityManager, clazz);
+    public BrandRepository(EntityManager entityManager) {
+        super(entityManager, Brand.class);
     }
 }

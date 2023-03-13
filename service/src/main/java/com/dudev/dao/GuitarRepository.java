@@ -28,7 +28,7 @@ public class GuitarRepository extends RepositoryBase<Integer, Guitar> {
         super(entityManager, Guitar.class);
     }
 
-    public List<Guitar> findAllGuitarsByPredicatesQueryDsl(Session session, GuitarFilter filter) {
+    public List<Guitar> findAllGuitarsByPredicatesQueryDsl(GuitarFilter filter) {
         com.querydsl.core.types.Predicate predicate = QPredicate.builder()
                 .add(filter.getModel(), guitar.model::eq)
                 .add(filter.getCountry(), guitar.country::eq)
@@ -37,33 +37,26 @@ public class GuitarRepository extends RepositoryBase<Integer, Guitar> {
                 .add(filter.getChangeWish(), guitar.changeWish::eq)
                 .add(filter.getChangeType(), guitar.changeType.description::eq)
                 .buildAnd();
-        return new JPAQuery<Guitar>(session)
+        return new JPAQuery<Guitar>(getEntityManager())
                 .from(guitar)
                 .where(predicate)
-                .setHint(GraphSemantic.FETCH.getJpaHintName(), withBrandAndChangeType(session))
+                .setHint(GraphSemantic.FETCH.getJpaHintName(), withBrandAndChangeType(getEntityManager()))
                 .fetch();
     }
 
-    public List<Guitar> findAllGuitarsQueryDsl(Session session) {
-        return new JPAQuery<Guitar>(session)
-                .select(guitar)
-                .from(guitar)
-                .fetch();
-    }
-
-    public List<Guitar> findAllGuitarsCriteria(Session session) {
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+    public List<Guitar> findAllGuitarsCriteria() {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Guitar> criteria = cb.createQuery(Guitar.class);
 
         Root<Guitar> guitar = criteria.from(Guitar.class);
 
         criteria.select(guitar);
 
-        return session.createQuery(criteria).list();
+        return getEntityManager().createQuery(criteria).getResultList();
     }
 
-    public List<Guitar> findGuitarsByPredicatesCriteria(Session session, GuitarFilter guitarFilter) {
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+    public List<Guitar> findGuitarsByPredicatesCriteria(GuitarFilter guitarFilter) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Guitar> criteria = cb.createQuery(Guitar.class);
         Root<Guitar> guitar = criteria.from(Guitar.class);
 
@@ -80,6 +73,6 @@ public class GuitarRepository extends RepositoryBase<Integer, Guitar> {
         criteria.select(guitar)
                 .where(predicates);
 
-        return session.createQuery(criteria).list();
+        return getEntityManager().createQuery(criteria).getResultList();
     }
 }

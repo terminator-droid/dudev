@@ -1,28 +1,28 @@
 package com.dudev.dao;
 
 import com.dudev.basetest.TransactionManagementTestBase;
-import com.dudev.entity.User;
-import com.dudev.entity.Role;
-import com.dudev.entity.User;
+import com.dudev.entity.ChangeType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.dudev.util.EntityGenerator.getUser;
-import static com.dudev.util.EntityGenerator.getUsers;
+import static com.dudev.util.EntityGenerator.getChangeType;
+import static com.dudev.util.EntityGenerator.getChangeTypes;
 import static com.dudev.util.EntityUtil.insertEntities;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class UserRepositoryIT extends TransactionManagementTestBase {
+class ChangeTypeRepositoryIT extends TransactionManagementTestBase {
 
-    static UserRepository userRepository;
+    static ChangeTypeRepository userRepository;
 
     @BeforeAll
     static void repoInit() {
-        userRepository = new UserRepository(session);
+        userRepository = new ChangeTypeRepository(session);
         session.beginTransaction();
         insertEntities(session);
         session.getTransaction().commit();
@@ -30,20 +30,24 @@ public class UserRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void save() {
-        User entity = getEntity();
+        ChangeType entity = getEntity();
 
         userRepository.save(entity);
 
         assertThat(entity.getId()).isNotNull();
     }
 
+    private ChangeType getEntity() {
+        return getChangeType();
+    }
+
     @Test
     void findById() {
-        User entity = getEntity();
+        ChangeType entity = getEntity();
         userRepository.save(entity);
         session.clear();
 
-        Optional<User> actualEntity = userRepository.findById(entity.getId());
+        Optional<ChangeType> actualEntity = userRepository.findById(entity.getId());
 
         assertThat(actualEntity).isPresent();
         assertThat(actualEntity.get()).isEqualTo(entity);
@@ -51,7 +55,7 @@ public class UserRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void delete() {
-        User entity = getEntity();
+        ChangeType entity = getEntity();
         userRepository.save(entity);
         session.clear();
 
@@ -62,7 +66,7 @@ public class UserRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void update() {
-        User entity = getEntity();
+        ChangeType entity = getEntity();
         userRepository.save(entity);
         session.clear();
 
@@ -76,38 +80,14 @@ public class UserRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void findAll() {
-        List<User> actualResult = userRepository.findAll();
+        ChangeType entity = getEntity();
+        List<ChangeType> actualResult = userRepository.findAll();
 
         assertThat(actualResult.size()).isEqualTo(getEntities().size());
     }
 
-    @Test
-    void findAllByRole() {
-        Role role = Role.USER;
-
-        List<User> users = userRepository.findAllByRole(role);
-
-        users.forEach(it -> assertThat(it.getRole()).isEqualTo(role));
+    private List<ChangeType> getEntities() {
+        return getChangeTypes();
     }
 
-    @Test
-    void findLimitedUsersOrderedByFullName() {
-        int limit = 3;
-
-        List<User> users = userRepository.findLimitedUsersOrderedByFullName(limit);
-
-        assertThat(users.size()).isEqualTo(limit);
-    }
-
-    private User getEntity() {
-        User user = getUser();
-
-        return user;
-    }
-
-    private List<User> getEntities() {
-        List<User> users = getUsers();
-
-        return users;
-    }
 }

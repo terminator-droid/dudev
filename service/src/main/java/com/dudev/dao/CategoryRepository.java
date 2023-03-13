@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 
 public class CategoryRepository extends RepositoryBase<Integer, Category> {
 
-    public CategoryRepository(EntityManager entityManager, Class<Category> clazz) {
-        super(entityManager, clazz);
+    public CategoryRepository(EntityManager entityManager) {
+        super(entityManager, Category.class);
     }
 }

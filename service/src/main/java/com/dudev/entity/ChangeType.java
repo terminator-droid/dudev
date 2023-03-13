@@ -24,7 +24,7 @@ import java.util.List;
 @SuperBuilder
 @Entity
 @Table(name = "change_type")
-public class ChangeType extends BaseEntity<Integer>{
+public class ChangeType extends BaseEntity<Integer> {
 
     @Column(nullable = false)
     private String description;

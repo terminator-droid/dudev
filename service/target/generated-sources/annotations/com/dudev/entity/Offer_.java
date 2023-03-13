@@ -1,6 +1,5 @@
 package com.dudev.entity;
 
-import java.time.LocalDateTime;
 import javax.annotation.processing.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -16,7 +15,6 @@ public abstract class Offer_ extends com.dudev.entity.BaseEntity_ {
 	public static volatile SingularAttribute<Offer, Boolean> accepted;
 	public static volatile SingularAttribute<Offer, Double> changeValue;
 	public static volatile SingularAttribute<Offer, User> buyer;
-	public static volatile SingularAttribute<Offer, LocalDateTime> timestamp;
 
 	public static final String SELLER = "seller";
 	public static final String OFFER_PRODUCTS = "offerProducts";
@@ -24,7 +22,6 @@ public abstract class Offer_ extends com.dudev.entity.BaseEntity_ {
 	public static final String ACCEPTED = "accepted";
 	public static final String CHANGE_VALUE = "changeValue";
 	public static final String BUYER = "buyer";
-	public static final String TIMESTAMP = "timestamp";
 
 }
 

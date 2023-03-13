@@ -7,11 +7,15 @@ import org.hibernate.Session;
 import org.hibernate.graph.RootGraph;
 import org.hibernate.graph.SubGraph;
 
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityResult;
+
 @UtilityClass
 public class EntityGraphUtil {
 
-    public static RootGraph<Product> withBrandAndChangeType(Session session) {
-        RootGraph<Product> entityGraph = session.createEntityGraph(Product.class);
+    public static EntityGraph<Product> withBrandAndChangeType(EntityManager entityManager) {
+        EntityGraph<Product> entityGraph = entityManager.createEntityGraph(Product.class);
         entityGraph.addAttributeNodes("brand", "changeType");
         return entityGraph;
     }
@@ -29,4 +33,4 @@ public class EntityGraphUtil {
         entityGraph.addAttributeNodes("userProducts");
         return entityGraph;
     }
- }
+}

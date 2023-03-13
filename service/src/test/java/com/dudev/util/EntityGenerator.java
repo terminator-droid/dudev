@@ -96,6 +96,7 @@ public class EntityGenerator {
                 .buyer(buyer)
                 .seller(seller)
                 .changeType(changeType)
+                .accepted(false)
                 .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
@@ -237,7 +238,7 @@ public class EntityGenerator {
                 .category(categories.get(0))
                 .brand(brands.get(1))
                 .wood("Ash")
-                .year(2030)
+                .year(1999)
                 .closed(false)
                 .build();
 

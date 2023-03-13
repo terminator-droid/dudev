@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 
 public class ChangeTypeRepository extends RepositoryBase<Integer, ChangeType> {
 
-    public ChangeTypeRepository(EntityManager entityManager, Class<ChangeType> clazz) {
-        super(entityManager, clazz);
+    public ChangeTypeRepository(EntityManager entityManager) {
+        super(entityManager, ChangeType.class);
     }
 }

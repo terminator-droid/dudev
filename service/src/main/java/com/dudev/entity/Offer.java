@@ -48,9 +48,6 @@ public class Offer extends BaseEntity<Integer> {
     private Double changeValue;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp;
-
-    @Column(nullable = false)
     private Boolean accepted;
 
 

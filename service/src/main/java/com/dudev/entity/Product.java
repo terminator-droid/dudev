@@ -48,7 +48,7 @@ public class Product extends BaseEntity<Integer> {
 
     private String changeWish;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
