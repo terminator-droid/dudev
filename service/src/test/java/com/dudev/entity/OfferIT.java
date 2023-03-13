@@ -9,18 +9,32 @@ import static com.dudev.util.EntityGenerator.getOffer;
 import static com.dudev.util.EntityGenerator.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OfferIT extends TransactionManagementTestBase {
+class OfferIT extends TransactionManagementTestBase {
 
 
     @Test
-    public void save() {
-        Offer offer = saveOffer();
+    void save() {
+        ChangeType changeType = getChangeType();
+        User buyer = getUser();
+        User seller = User.builder()
+                .username("Gosling333")
+                .role(USER)
+                .fullName("Ryan Gosling")
+                .password("second_password")
+                .phoneNumber("8920-122-22-23")
+                .build();
+        Offer offer = getOffer(buyer, seller, changeType);
+        session.save(seller);
+        session.save(buyer);
+        session.save(changeType);
+
+        session.save(offer);
 
         assertThat(offer.getId()).isNotNull();
     }
 
     @Test
-    public void get() {
+    void get() {
         Offer offer = saveOffer();
 
         Offer actualOffer = session.get(Offer.class, offer.getId());
@@ -29,7 +43,7 @@ public class OfferIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void update() {
+    void update() {
         Offer initialOffer = saveOffer();
 
         initialOffer.setChangeValue(200);
@@ -42,7 +56,7 @@ public class OfferIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Offer initialOffer = saveOffer();
 
         session.delete(initialOffer);

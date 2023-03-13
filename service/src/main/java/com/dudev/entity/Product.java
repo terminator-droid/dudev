@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,14 +19,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = {"userLikedProducts", "offerProducts"})
 @EqualsAndHashCode(exclude = {"userLikedProducts", "offerProducts"})
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Builder
 public class Product extends BaseEntity<Integer> {
@@ -46,7 +44,7 @@ public class Product extends BaseEntity<Integer> {
     private double changeValue;
     private String changeWish;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

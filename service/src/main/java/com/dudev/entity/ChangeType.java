@@ -22,7 +22,7 @@ import java.util.List;
 @EqualsAndHashCode(exclude = "products")
 @Builder
 @Entity
-@Table(name = "change_types")
+@Table(name = "change_type")
 public class ChangeType extends BaseEntity<Integer>{
 
     @Column(nullable = false)

@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @ToString(exclude = "category")
 @Builder
 @Entity
-@Table(name = "brands")
+@Table(name = "brand")
 public class Brand extends BaseEntity<Integer> {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

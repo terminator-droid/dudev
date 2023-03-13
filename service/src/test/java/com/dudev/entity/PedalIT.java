@@ -10,17 +10,27 @@ import static com.dudev.util.EntityGenerator.getPedal;
 import static com.dudev.util.EntityGenerator.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PedalIT extends TransactionManagementTestBase {
+class PedalIT extends TransactionManagementTestBase {
 
     @Test
-    public void save() {
-        Pedal pedal = savePedal();
+    void save() {
+        User user = getUser();
+        Category category = getCategory();
+        ChangeType changeType = getChangeType();
+        Brand brand = getBrand(category);
+        Pedal pedal = getPedal(category, changeType, brand, user);
+        session.save(category);
+        session.save(brand);
+        session.save(user);
+        session.save(changeType);
+
+        session.save(pedal);
 
         assertThat(pedal.getId()).isNotNull();
     }
 
     @Test
-    public void get() {
+    void get() {
         Pedal pedal = savePedal();
         session.clear();
 
@@ -30,7 +40,7 @@ public class PedalIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void update() {
+    void update() {
         Pedal initialPedal = savePedal();
         session.clear();
 
@@ -44,7 +54,7 @@ public class PedalIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Pedal initialPedal = savePedal();
         session.clear();
 

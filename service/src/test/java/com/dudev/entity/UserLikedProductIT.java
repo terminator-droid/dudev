@@ -14,17 +14,39 @@ import static com.dudev.util.EntityGenerator.getProduct;
 import static com.dudev.util.EntityGenerator.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserLikedProductIT extends TransactionManagementTestBase {
+class UserLikedProductIT extends TransactionManagementTestBase {
 
     @Test
-    public void save() {
-        UserLikedProduct userLikedProduct = saveUserLikedProduct();
+    void save() {
+        Category category = getCategory();
+        Brand brand = getBrand(category);
+        ChangeType changeType = getChangeType();
+        User user = getUser();
+        User userLike = User.builder()
+                .username("Gosling333")
+                .role(USER)
+                .fullName("Ryan Gosling")
+                .password("second_password")
+                .phoneNumber("8920-122-22-23")
+                .build();
+        Product product = getProduct(category, changeType, brand, user);
+        UserLikedProduct userLikedProduct = getUserLikedProduct();
+        userLikedProduct.setProduct(product);
+        userLikedProduct.setUser(user);
+        session.save(category);
+        session.save(brand);
+        session.save(changeType);
+        session.save(user);
+        session.save(userLike);
+        session.save(product);
+
+        session.save(userLikedProduct);
 
         assertThat(userLikedProduct.getId()).isNotNull();
     }
 
     @Test
-    public void get() {
+    void get() {
         UserLikedProduct userLikedProduct = saveUserLikedProduct();
         session.clear();
         UserLikedProduct actualUserLikedProduct = session.get(UserLikedProduct.class, userLikedProduct.getId());
@@ -33,7 +55,7 @@ public class UserLikedProductIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void update() {
+    void update() {
         UserLikedProduct initialUserLikedProduct = saveUserLikedProduct();
         session.clear();
         initialUserLikedProduct.setCreated_at(LocalDateTime.of(2022, 2, 2, 0, 0));
@@ -47,7 +69,7 @@ public class UserLikedProductIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         UserLikedProduct userLikedProduct = saveUserLikedProduct();
         session.clear();
 
@@ -56,6 +78,7 @@ public class UserLikedProductIT extends TransactionManagementTestBase {
 
         assertThat(deletedUserLikedProduct).isNull();
     }
+
     private UserLikedProduct saveUserLikedProduct() {
         Category category = getCategory();
         Brand brand = getBrand(category);

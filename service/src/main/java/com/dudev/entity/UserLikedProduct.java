@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "users_liked_products")
+@Table(name = "users_liked_product")
 public class UserLikedProduct extends BaseEntity<Integer> {
 
     @ManyToOne

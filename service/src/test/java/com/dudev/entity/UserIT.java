@@ -6,17 +6,19 @@ import org.junit.jupiter.api.Test;
 import static com.dudev.util.EntityGenerator.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserIT extends TransactionManagementTestBase {
+class UserIT extends TransactionManagementTestBase {
 
     @Test
-    public void save() {
-        User user = saveUser();
+    void save() {
+        User user = getUser();
+
+        session.save(user);
 
         assertThat(user.getId()).isNotNull();
     }
 
     @Test
-    public void get() {
+    void get() {
         User user = saveUser();
         session.clear();
         User actualUser = session.get(User.class, user.getId());
@@ -25,7 +27,7 @@ public class UserIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void update() {
+    void update() {
         User initialUser = saveUser();
         session.clear();
         initialUser.setUsername("TestUsername_123");
@@ -39,7 +41,7 @@ public class UserIT extends TransactionManagementTestBase {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         User user = saveUser();
         session.clear();
 
