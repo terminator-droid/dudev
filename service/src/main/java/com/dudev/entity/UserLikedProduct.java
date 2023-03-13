@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,9 +16,9 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "users_liked_product")
+@SuperBuilder
 public class UserLikedProduct extends BaseEntity<Integer> {
 
     @ManyToOne
@@ -27,9 +28,6 @@ public class UserLikedProduct extends BaseEntity<Integer> {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
-    @Column(nullable = false)
-    private LocalDateTime created_at;
 
     public void setUser(User user) {
         this.user = user;

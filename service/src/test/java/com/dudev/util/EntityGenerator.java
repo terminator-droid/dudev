@@ -51,7 +51,7 @@ public class EntityGenerator {
     }
 
     public static Guitar getGuitar(Category category, ChangeType changeType, Brand brand, User user) {
-        return Guitar.guitarBuilder()
+        return Guitar.builder()
                 .brand(brand)
                 .category(category)
                 .changeType(changeType)
@@ -59,12 +59,13 @@ public class EntityGenerator {
                 .description("Good guitar")
                 .price(2000)
                 .user(user)
-                .timestamp(LocalDateTime.of(2022, 2, 1, 0, 0))
+                .closed(false)
+                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
     public static Pedal getPedal(Category category, ChangeType changeType, Brand brand, User user) {
-        return Pedal.pedalBuilder()
+        return Pedal.builder()
                 .brand(brand)
                 .category(category)
                 .changeType(changeType)
@@ -72,7 +73,8 @@ public class EntityGenerator {
                 .description("Good pedal")
                 .price(2000)
                 .user(user)
-                .timestamp(LocalDateTime.of(2022, 2, 1, 0, 0))
+                .closed(false)
+                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
@@ -84,7 +86,8 @@ public class EntityGenerator {
                 .description("Good pedal")
                 .price(2000)
                 .user(user)
-                .timestamp(LocalDateTime.of(2022, 2, 1, 0, 0))
+                .closed(false)
+                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
@@ -93,7 +96,8 @@ public class EntityGenerator {
                 .buyer(buyer)
                 .seller(seller)
                 .changeType(changeType)
-                .timestamp(LocalDateTime.of(2022, 2, 1, 0, 0))
+                .accepted(false)
+                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
@@ -105,7 +109,7 @@ public class EntityGenerator {
 
     public static UserLikedProduct getUserLikedProduct() {
         return UserLikedProduct.builder()
-                .created_at(LocalDateTime.of(2022, 2, 1, 0, 0))
+                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
@@ -203,8 +207,8 @@ public class EntityGenerator {
     public static List<Product> getProducts(List<User> users, List<ChangeType> changeTypes,
                                             List<Category> categories,
                                             List<Brand> brands) {
-        Guitar guitar1 = Guitar.guitarBuilder()
-                .timestamp(LocalDateTime.now())
+        Guitar guitar1 = Guitar.builder()
+                .createdAt(LocalDateTime.now())
                 .user(users.get(0))
                 .price(40000)
                 .description("Good guitar")
@@ -218,9 +222,10 @@ public class EntityGenerator {
                 .brand(brands.get(0))
                 .wood("Oak")
                 .year(1999)
+                .closed(false)
                 .build();
-        Guitar guitar2 = Guitar.guitarBuilder()
-                .timestamp(LocalDateTime.now())
+        Guitar guitar2 = Guitar.builder()
+                .createdAt(LocalDateTime.now())
                 .user(users.get(1))
                 .price(5000)
                 .description("Good guitar really")
@@ -233,11 +238,12 @@ public class EntityGenerator {
                 .category(categories.get(0))
                 .brand(brands.get(1))
                 .wood("Ash")
-                .year(2030)
+                .year(1999)
+                .closed(false)
                 .build();
 
-        Guitar guitar3 = Guitar.guitarBuilder()
-                .timestamp(LocalDateTime.now())
+        Guitar guitar3 = Guitar.builder()
+                .createdAt(LocalDateTime.now())
                 .user(users.get(2))
                 .price(40000)
                 .description("Broken")
@@ -251,10 +257,11 @@ public class EntityGenerator {
                 .brand(brands.get(2))
                 .wood("Ash")
                 .year(2021)
+                .closed(false)
                 .build();
 
-        Guitar guitar4 = Guitar.guitarBuilder()
-                .timestamp(LocalDateTime.now())
+        Guitar guitar4 = Guitar.builder()
+                .createdAt(LocalDateTime.now())
                 .user(users.get(3))
                 .price(40000)
                 .description("Good")
@@ -268,9 +275,10 @@ public class EntityGenerator {
                 .brand(brands.get(2))
                 .wood("Ash")
                 .year(1988)
+                .closed(false)
                 .build();
-        Pedal pedal = Pedal.pedalBuilder()
-                .timestamp(LocalDateTime.now())
+        Pedal pedal = Pedal.builder()
+                .createdAt(LocalDateTime.now())
                 .user(users.get(3))
                 .price(40000)
                 .description("Good")
@@ -280,6 +288,7 @@ public class EntityGenerator {
                 .changeWish("BossDD20")
                 .category(categories.get(1))
                 .brand(brands.get(3))
+                .closed(false)
                 .build();
         return List.of(guitar1, guitar2, guitar3, guitar4, pedal);
     }

@@ -1,5 +1,6 @@
 package com.dudev.util;
 
+import com.dudev.entity.Audit;
 import com.dudev.entity.Brand;
 import com.dudev.entity.Category;
 import com.dudev.entity.ChangeType;
@@ -38,6 +39,7 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Product.class);
         configuration.addAnnotatedClass(UserLikedProduct.class);
         configuration.addAnnotatedClass(OfferProduct.class);
+        configuration.addAnnotatedClass(Audit.class);
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         return configuration;
     }

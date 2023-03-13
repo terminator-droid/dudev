@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,18 +34,22 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = {"userLikedProducts", "userProducts"})
 @EqualsAndHashCode(exclude = {"userLikedProducts", "userProducts"})
-@Builder
+@SuperBuilder
 @Entity
 @Table(name = "users", schema = "public")
 public class User extends BaseEntity<Integer> {
 
     @Column(nullable = false)
     private String fullName;
+
     @Column(nullable = false)
     private String phoneNumber;
+
     @Column(nullable = false, unique = true)
     private String password;
+
     private String address;
+
     @Column(nullable = false, unique = true)
     private String username;
 

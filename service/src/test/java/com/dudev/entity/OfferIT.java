@@ -46,7 +46,7 @@ class OfferIT extends TransactionManagementTestBase {
     void update() {
         Offer initialOffer = saveOffer();
 
-        initialOffer.setChangeValue(200);
+        initialOffer.setChangeValue(200.0);
         session.update(initialOffer);
         session.flush();
         session.clear();

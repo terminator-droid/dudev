@@ -9,9 +9,9 @@ public class GuitarFilter {
 
     String brand;
     String model;
-    int year;
+    Integer year;
     String country;
     String changeType;
     String changeWish;
-    boolean closed;
+    Boolean closed;
 }

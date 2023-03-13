@@ -58,7 +58,7 @@ class UserLikedProductIT extends TransactionManagementTestBase {
     void update() {
         UserLikedProduct initialUserLikedProduct = saveUserLikedProduct();
         session.clear();
-        initialUserLikedProduct.setCreated_at(LocalDateTime.of(2022, 2, 2, 0, 0));
+        initialUserLikedProduct.setCreatedAt(LocalDateTime.of(2022, 2, 2, 0, 0));
         session.update(initialUserLikedProduct);
         session.flush();
         session.clear();
