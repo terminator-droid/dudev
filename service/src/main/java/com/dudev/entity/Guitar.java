@@ -42,15 +42,4 @@ public class Guitar extends Product {
 
     @Column(name = "fingerboard_wood")
     private String wood;
-
-//    @Builder(builderMethodName = "guitarBuilder")
-//    public Guitar(Category category, Brand brand, ChangeType changeType, double changeValue, String changeWish, User user, String media, LocalDateTime timestamp, double price, boolean closed, String description, List<UserLikedProduct> userLikedProducts, List<OfferProduct> offerProducts, Integer id, String model, int year, String country, String pickUps, String wood) {
-//        super(category, brand, changeType, changeValue, changeWish, user, media, timestamp, price, closed, description, userLikedProducts, offerProducts);
-//        this.id = id;
-//        this.model = model;
-//        this.year = year;
-//        this.country = country;
-//        this.pickUps = pickUps;
-//        this.wood = wood;
-//    }
 }

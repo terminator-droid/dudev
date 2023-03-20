@@ -3,34 +3,22 @@ package com.dudev.dao;
 import com.dudev.basetest.TransactionManagementTestBase;
 import com.dudev.entity.User;
 import com.dudev.entity.Role;
-import com.dudev.entity.User;
-import org.junit.jupiter.api.BeforeAll;
+import com.dudev.util.EntityGenerator;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.dudev.util.EntityGenerator.getUser;
-import static com.dudev.util.EntityGenerator.getUsers;
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.*;
 
 public class UserRepositoryIT extends TransactionManagementTestBase {
 
-    static UserRepository userRepository;
-
-    @BeforeAll
-    static void repoInit() {
-        userRepository = new UserRepository(session);
-        session.beginTransaction();
-        insertEntities(session);
-        session.getTransaction().commit();
-    }
+    static UserRepository userRepository = applicationContext.getBean(UserRepository.class);
 
     @Test
     void save() {
-        User entity = getEntity();
+        User entity = getUser();
 
         userRepository.save(entity);
 
@@ -39,9 +27,9 @@ public class UserRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void findById() {
-        User entity = getEntity();
+        User entity = getUser();
         userRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         Optional<User> actualEntity = userRepository.findById(entity.getId());
 
@@ -51,9 +39,9 @@ public class UserRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void delete() {
-        User entity = getEntity();
+        User entity = getUser();
         userRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         userRepository.delete(entity);
 
@@ -62,23 +50,24 @@ public class UserRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void update() {
-        User entity = getEntity();
+        User entity = getUser();
         userRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
-        LocalDateTime createdAt = LocalDateTime.of(2000, 1, 1, 2, 2, 1);
-        entity.setCreatedAt(createdAt);
+        entity.setUsername("Username123");
         userRepository.update(entity);
-        session.clear();
+        entityManager.clear();
 
         assertThat(userRepository.findById(entity.getId()).get()).isEqualTo(entity);
     }
 
     @Test
     void findAll() {
+        insertEntities(entityManager);
+
         List<User> actualResult = userRepository.findAll();
 
-        assertThat(actualResult.size()).isEqualTo(getEntities().size());
+        assertThat(actualResult.size()).isEqualTo(getUsers().size());
     }
 
     @Test
@@ -99,14 +88,14 @@ public class UserRepositoryIT extends TransactionManagementTestBase {
         assertThat(users.size()).isEqualTo(limit);
     }
 
-    private User getEntity() {
-        User user = getUser();
+    private User getUser() {
+        User user = EntityGenerator.getUser();
 
         return user;
     }
 
-    private List<User> getEntities() {
-        List<User> users = getUsers();
+    private List<User> getUsers() {
+        List<User> users = EntityGenerator.getUsers();
 
         return users;
     }

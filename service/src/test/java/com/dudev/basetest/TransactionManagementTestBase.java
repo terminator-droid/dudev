@@ -1,41 +1,40 @@
 package com.dudev.basetest;
 
-import com.dudev.dao.UserRepositoryIT;
-import com.dudev.util.HibernateTestUtil;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import com.dudev.configuration.ApplicationConfiguration;
+import com.dudev.configuration.TestApplicationConfiguration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.lang.reflect.Proxy;
+import javax.persistence.EntityManager;
 
 public abstract class TransactionManagementTestBase {
 
-    protected static SessionFactory sessionFactory;
-    protected static Session session;
+    protected static ConfigurableApplicationContext applicationContext;
+    protected static EntityManager entityManager;
+
 
     @BeforeAll
     static void init() {
-        sessionFactory = HibernateTestUtil.buildSessionFactory();
-        session = (Session) Proxy.newProxyInstance(UserRepositoryIT.class.getClassLoader(), new Class[]{Session.class},
-                (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
+        applicationContext = new AnnotationConfigApplicationContext(TestApplicationConfiguration.class);
+        entityManager = applicationContext.getBean(EntityManager.class);
     }
 
     @AfterAll
     static void ruinFactory() {
-        sessionFactory.close();
+        applicationContext.close();
     }
 
     @BeforeEach
     void sessionInit() {
-//        session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
+        entityManager.getTransaction().begin();
     }
 
     @AfterEach
     void rollbackTransaction() {
-        session.getTransaction().rollback();
+        entityManager.getTransaction().rollback();
     }
 }

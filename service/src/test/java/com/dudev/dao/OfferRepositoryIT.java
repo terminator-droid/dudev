@@ -21,15 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class OfferRepositoryIT extends TransactionManagementTestBase {
 
-    static OfferRepository offerRepository;
-
-    @BeforeAll
-    static void repoInit() {
-        offerRepository = new OfferRepository(session);
-        session.beginTransaction();
-        insertEntities(session);
-        session.getTransaction().commit();
-    }
+    static OfferRepository offerRepository = applicationContext.getBean(OfferRepository.class);
 
     @Test
     void save() {
@@ -44,7 +36,7 @@ class OfferRepositoryIT extends TransactionManagementTestBase {
     void findById() {
         Offer entity = getEntity();
         offerRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         Optional<Offer> actualEntity = offerRepository.findById(entity.getId());
 
@@ -64,9 +56,9 @@ class OfferRepositoryIT extends TransactionManagementTestBase {
                 .build();
         Offer offer = getOffer(buyer, seller, changeType);
 
-        session.save(seller);
-        session.save(buyer);
-        session.save(changeType);
+        entityManager.persist(seller);
+        entityManager.persist(buyer);
+        entityManager.persist(changeType);
         return offer;
     }
 
@@ -74,7 +66,7 @@ class OfferRepositoryIT extends TransactionManagementTestBase {
     void delete() {
         Offer entity = getEntity();
         offerRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         offerRepository.delete(entity);
 
@@ -85,12 +77,12 @@ class OfferRepositoryIT extends TransactionManagementTestBase {
     void update() {
         Offer entity = getEntity();
         offerRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         LocalDateTime createdAt = LocalDateTime.of(2000, 1, 1, 2, 2, 1);
         entity.setCreatedAt(createdAt);
         offerRepository.update(entity);
-        session.clear();
+        entityManager.clear();
 
         assertThat(offerRepository.findById(entity.getId()).get()).isEqualTo(entity);
     }

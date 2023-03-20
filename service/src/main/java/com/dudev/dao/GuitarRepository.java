@@ -8,6 +8,7 @@ import com.dudev.entity.Guitar_;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.Session;
 import org.hibernate.graph.GraphSemantic;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,9 +21,8 @@ import java.util.List;
 import static com.dudev.entity.QGuitar.guitar;
 import static com.dudev.util.EntityGraphUtil.withBrandAndChangeType;
 
-
+@Repository
 public class GuitarRepository extends RepositoryBase<Integer, Guitar> {
-
 
     public GuitarRepository(EntityManager entityManager) {
         super(entityManager, Guitar.class);
@@ -42,17 +42,6 @@ public class GuitarRepository extends RepositoryBase<Integer, Guitar> {
                 .where(predicate)
                 .setHint(GraphSemantic.FETCH.getJpaHintName(), withBrandAndChangeType(getEntityManager()))
                 .fetch();
-    }
-
-    public List<Guitar> findAllGuitarsCriteria() {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Guitar> criteria = cb.createQuery(Guitar.class);
-
-        Root<Guitar> guitar = criteria.from(Guitar.class);
-
-        criteria.select(guitar);
-
-        return getEntityManager().createQuery(criteria).getResultList();
     }
 
     public List<Guitar> findGuitarsByPredicatesCriteria(GuitarFilter guitarFilter) {

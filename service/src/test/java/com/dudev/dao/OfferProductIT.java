@@ -16,15 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class OfferProductIT extends TransactionManagementTestBase {
 
-    static OfferProductRepository offerProductRepository;
-
-    @BeforeAll
-    static void repoInit() {
-        OfferProductIT.offerProductRepository = new OfferProductRepository(session);
-        session.beginTransaction();
-        insertEntities(session);
-        session.getTransaction().commit();
-    }
+    static OfferProductRepository offerProductRepository = applicationContext.getBean(OfferProductRepository.class);
 
     @Test
     void save() {
@@ -39,7 +31,7 @@ class OfferProductIT extends TransactionManagementTestBase {
     void findById() {
         OfferProduct entity = getEntity();
         OfferProductIT.offerProductRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         Optional<OfferProduct> actualEntity = OfferProductIT.offerProductRepository.findById(entity.getId());
 
@@ -51,7 +43,7 @@ class OfferProductIT extends TransactionManagementTestBase {
     void delete() {
         OfferProduct entity = getEntity();
         OfferProductIT.offerProductRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         OfferProductIT.offerProductRepository.delete(entity);
 
@@ -62,12 +54,12 @@ class OfferProductIT extends TransactionManagementTestBase {
     void update() {
         OfferProduct entity = getEntity();
         OfferProductIT.offerProductRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         LocalDateTime createdAt = LocalDateTime.of(2000, 1, 1, 2, 2, 1);
         entity.setCreatedAt(createdAt);
         OfferProductIT.offerProductRepository.update(entity);
-        session.clear();
+        entityManager.clear();
 
         assertThat(OfferProductIT.offerProductRepository.findById(entity.getId()).get()).isEqualTo(entity);
     }

@@ -1,10 +1,14 @@
 package com.dudev.dao;
 
+import com.dudev.entity.OfferProduct;
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 
-public class OfferProductRepository extends RepositoryBase<Integer, com.dudev.entity.OfferProduct> {
+@Repository
+public class OfferProductRepository extends RepositoryBase<Integer, OfferProduct> {
 
     public OfferProductRepository(EntityManager entityManager) {
-        super(entityManager, com.dudev.entity.OfferProduct.class);
+        super(entityManager, OfferProduct.class);
     }
 }

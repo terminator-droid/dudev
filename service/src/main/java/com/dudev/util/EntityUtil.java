@@ -6,8 +6,9 @@ import com.dudev.entity.ChangeType;
 import com.dudev.entity.Product;
 import com.dudev.entity.User;
 import lombok.experimental.UtilityClass;
-import org.hibernate.Session;
+import javax.persistence.EntityManager;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.dudev.util.EntityGenerator.getBrands;
@@ -20,60 +21,50 @@ import static com.dudev.util.EntityGenerator.getUsers;
 @UtilityClass
 public class EntityUtil {
 
-    public static void insertEntities(Session session) {
-        List<Category> categories = insertCategories(session);
-        List<Brand> brands = insertBrands(session, categories);
-        List<ChangeType> changeTypes = insertChangeTypes(session);
-        List<User> users = insertUsers(session);
-        insertProducts(session, users, changeTypes, categories, brands);
+    public static void insertEntities(EntityManager entityManager) {
+        List<Category> categories = insertCategories(entityManager);
+        List<Brand> brands = insertBrands(entityManager, categories);
+        List<ChangeType> changeTypes = insertChangeTypes(entityManager);
+        List<User> users = insertUsers(entityManager);
+        insertProducts(entityManager, users, changeTypes, categories, brands);
     }
 
 
-    private static void insertProducts(Session session, List<User> users, List<ChangeType> changeTypes,
+    private static void insertProducts(EntityManager entityManager, List<User> users, List<ChangeType> changeTypes,
                                        List<Category> categories,
                                        List<Brand> brands) {
         List<Product> products = getProducts(users, changeTypes, categories, brands);
-        for (Product product : products) {
-            session.save(product);
-        }
-        session.flush();
+        products.forEach(entityManager::persist);
+        entityManager.flush();
     }
 
-    private static List<User> insertUsers(Session session) {
+    private static List<User> insertUsers(EntityManager entityManager) {
         List<User> users = getUsers();
-        for (User user : users) {
-            session.save(user);
-        }
-        session.flush();
+        users.forEach(entityManager::persist);
+        entityManager.flush();
         return users;
     }
 
 
-    private static List<ChangeType> insertChangeTypes(Session session) {
+    private static List<ChangeType> insertChangeTypes(EntityManager entityManager) {
         List<ChangeType> changeTypes = getChangeTypes();
-        for (ChangeType changeType : changeTypes) {
-            session.save(changeType);
-        }
-        session.flush();
+        changeTypes.forEach(entityManager::persist);
+        entityManager.flush();
         return changeTypes;
     }
 
-    private static List<Brand> insertBrands(Session session, List<Category> categories) {
+    private static List<Brand> insertBrands(EntityManager entityManager, List<Category> categories) {
         List<Brand> brands = getBrands(categories);
-        for (Brand brand : brands) {
-            session.save(brand);
-        }
-        session.flush();
+        brands.forEach(entityManager::persist);
+        entityManager.flush();
         return brands;
     }
 
-    private static List<Category> insertCategories(Session session) {
+    private static List<Category> insertCategories(EntityManager entityManager) {
         List<Category> categories = getCategories();
 
-        for (Category category : categories) {
-            session.save(category);
-        }
-        session.flush();
+        categories.forEach(entityManager::persist);
+        entityManager.flush();
         return categories;
     }
 }

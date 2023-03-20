@@ -3,34 +3,22 @@ package com.dudev.dao;
 import com.dudev.basetest.TransactionManagementTestBase;
 import com.dudev.entity.Category;
 import com.dudev.util.EntityGenerator;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.dudev.util.EntityGenerator.getCategories;
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 class CategoryRepositoryIT extends TransactionManagementTestBase {
 
-    static CategoryRepository categoryRepository;
-
-    @BeforeAll
-    static void repoInit() {
-        categoryRepository = new CategoryRepository(session);
-        session.beginTransaction();
-        insertEntities(session);
-        session.getTransaction().commit();
-    }
+    static CategoryRepository categoryRepository = applicationContext.getBean(CategoryRepository.class);
 
     @Test
     void save() {
-        Category entity = getEntity();
+        Category entity = getCategory();
 
         categoryRepository.save(entity);
 
@@ -39,9 +27,9 @@ class CategoryRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void findById() {
-        Category entity = getEntity();
+        Category entity = getCategory();
         categoryRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         Optional<Category> actualEntity = categoryRepository.findById(entity.getId());
 
@@ -51,9 +39,9 @@ class CategoryRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void delete() {
-        Category entity = getEntity();
+        Category entity = getCategory();
         categoryRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         categoryRepository.delete(entity);
 
@@ -62,30 +50,32 @@ class CategoryRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void update() {
-        Category entity = getEntity();
+        Category entity = getCategory();
         categoryRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
-        LocalDateTime createdAt = LocalDateTime.of(2000, 1, 1, 2, 2, 1);
-        entity.setCreatedAt(createdAt);
+        entity.setName("pedal");
         categoryRepository.update(entity);
-        session.clear();
+        entityManager.clear();
 
         assertThat(categoryRepository.findById(entity.getId()).get()).isEqualTo(entity);
     }
 
     @Test
     void findAll() {
+        insertEntities(entityManager);
+
         List<Category> actualResult = categoryRepository.findAll();
+        List<Category> expectedResult = getCategories();
 
-        assertThat(actualResult.size()).isEqualTo(getEntities().size());
+        assertThat(actualResult.size()).isEqualTo(expectedResult.size());
     }
 
-    private List<Category> getEntities() {
-        return getCategories();
+    private List<Category> getCategories() {
+        return EntityGenerator.getCategories();
     }
 
-    private Category getEntity() {
+    private Category getCategory() {
         return EntityGenerator.getCategory();
     }
 }

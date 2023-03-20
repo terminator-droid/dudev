@@ -3,36 +3,24 @@ package com.dudev.dao;
 import com.dudev.basetest.TransactionManagementTestBase;
 import com.dudev.entity.Brand;
 import com.dudev.entity.Category;
-import org.junit.jupiter.api.BeforeAll;
+import com.dudev.util.EntityGenerator;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.dudev.util.EntityGenerator.getBrand;
-import static com.dudev.util.EntityGenerator.getBrands;
 import static com.dudev.util.EntityGenerator.getCategories;
 import static com.dudev.util.EntityGenerator.getCategory;
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class BrandRepositoryIT extends TransactionManagementTestBase {
 
-    static BrandRepository brandRepository;
-
-    @BeforeAll
-    static void repoInit() {
-        brandRepository = new BrandRepository(session);
-        session.beginTransaction();
-        insertEntities(session);
-        session.getTransaction().commit();
-    }
+    static BrandRepository brandRepository = new BrandRepository(entityManager);
 
     @Test
     void save() {
-        Brand entity = getEntity();
+        Brand entity = getBrand();
 
         brandRepository.save(entity);
 
@@ -41,9 +29,9 @@ class BrandRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void findById() {
-        Brand entity = getEntity();
+        Brand entity = getBrand();
         brandRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         Optional<Brand> actualEntity = brandRepository.findById(entity.getId());
 
@@ -53,9 +41,9 @@ class BrandRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void delete() {
-        Brand entity = getEntity();
+        Brand entity = getBrand();
         brandRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         brandRepository.delete(entity);
 
@@ -64,37 +52,38 @@ class BrandRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void update() {
-        Brand entity = getEntity();
+        Brand entity = getBrand();
         brandRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
-        LocalDateTime createdAt = LocalDateTime.of(2000, 1, 1, 2, 2, 1);
-        entity.setCreatedAt(createdAt);
+        entity.setName("Aria");
         brandRepository.update(entity);
-        session.clear();
+        entityManager.clear();
 
         assertThat(brandRepository.findById(entity.getId()).get()).isEqualTo(entity);
     }
 
     @Test
     void findAll() {
-        List<Brand> actualResult = brandRepository.findAll();
+        insertEntities(entityManager);
 
-        assertThat(actualResult.size()).isEqualTo(getEntities().size());
+        List<Brand> actualResult = brandRepository.findAll();
+        List<Brand> expectedResult = getBrands();
+
+        assertThat(actualResult.size()).isEqualTo(expectedResult.size());
     }
 
-    private Brand getEntity() {
+    private Brand getBrand() {
         Category category = getCategory();
-        Brand brand = getBrand(category);
+        Brand brand = EntityGenerator.getBrand(category);
 
-        session.save(category);
+        entityManager.persist(category);
         return brand;
     }
 
-    private List<Brand> getEntities() {
+    private List<Brand> getBrands() {
         List<Category> categories = getCategories();
-        List<Brand> brands = getBrands(categories);
 
-        return brands;
+        return EntityGenerator.getBrands(categories);
     }
 }

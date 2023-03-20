@@ -33,13 +33,4 @@ public class Pedal extends Product {
     private String model;
 
     private Double shopPrice;
-
-
-//    @Builder(builderMethodName = "pedalBuilder")
-//    public Pedal(Category category, Brand brand, ChangeType changeType, double changeValue, String changeWish, User user, String media, LocalDateTime timestamp, double price, boolean closed, String description, List<UserLikedProduct> userLikedProducts, List<OfferProduct> offerProducts, Integer id, String model, Double shopPrice) {
-//        super(category, brand, changeType, changeValue, changeWish, user, media, createdAt, price, closed, description, userLikedProducts, offerProducts);
-//        this.id = id;
-//        this.model = model;
-//        this.shopPrice = shopPrice;
-//    }
 }

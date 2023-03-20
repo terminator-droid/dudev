@@ -12,17 +12,17 @@ public class AuditTableListener implements PreDeleteEventListener, PreInsertEven
 
     @Override
     public boolean onPreDelete(PreDeleteEvent preDeleteEvent) {
-        getAudit(preDeleteEvent, Audit.Operation.DELETE);
+        saveAudit(preDeleteEvent, Audit.Operation.DELETE);
         return false;
     }
 
     @Override
     public boolean onPreInsert(PreInsertEvent preInsertEvent) {
-        getAudit(preInsertEvent, Audit.Operation.INSERT);
+        saveAudit(preInsertEvent, Audit.Operation.INSERT);
         return false;
     }
 
-    private static void getAudit(AbstractPreDatabaseOperationEvent preDeleteEvent, Audit.Operation operation) {
+    private static void saveAudit(AbstractPreDatabaseOperationEvent preDeleteEvent, Audit.Operation operation) {
         if (preDeleteEvent.getEntity().getClass() != Audit.class) {
             Audit audit = Audit.builder()
                     .entityId(preDeleteEvent.getId())

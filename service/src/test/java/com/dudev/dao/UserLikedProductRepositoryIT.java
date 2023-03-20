@@ -17,15 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class UserLikedProductRepositoryIT extends TransactionManagementTestBase {
 
-    static UserLikedProductRepository userLikedProductRepository;
-
-    @BeforeAll
-    static void repoInit() {
-        userLikedProductRepository = new UserLikedProductRepository(session);
-        session.beginTransaction();
-        insertEntities(session);
-        session.getTransaction().commit();
-    }
+    static UserLikedProductRepository userLikedProductRepository = applicationContext.getBean(UserLikedProductRepository.class);
 
     @Test
     void save() {
@@ -40,7 +32,7 @@ class UserLikedProductRepositoryIT extends TransactionManagementTestBase {
     void findById() {
         UserLikedProduct entity = getEntity();
         userLikedProductRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         Optional<UserLikedProduct> actualEntity = userLikedProductRepository.findById(entity.getId());
 
@@ -52,7 +44,7 @@ class UserLikedProductRepositoryIT extends TransactionManagementTestBase {
     void delete() {
         UserLikedProduct entity = getEntity();
         userLikedProductRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         userLikedProductRepository.delete(entity);
 
@@ -63,12 +55,12 @@ class UserLikedProductRepositoryIT extends TransactionManagementTestBase {
     void update() {
         UserLikedProduct entity = getEntity();
         userLikedProductRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         LocalDateTime createdAt = LocalDateTime.of(2000, 1, 1, 2, 2, 1);
         entity.setCreatedAt(createdAt);
         userLikedProductRepository.update(entity);
-        session.clear();
+        entityManager.clear();
 
         assertThat(userLikedProductRepository.findById(entity.getId()).get()).isEqualTo(entity);
     }

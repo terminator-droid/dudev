@@ -6,6 +6,7 @@ import com.dudev.entity.User_;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.graph.GraphSemantic;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static com.dudev.util.EntityGraphUtil.withUserProductsAndBrandsAndChangeTypes;
 
+@Repository
 public class UserRepository extends RepositoryBase<Integer, User> {
 
     public UserRepository(EntityManager entityManager) {

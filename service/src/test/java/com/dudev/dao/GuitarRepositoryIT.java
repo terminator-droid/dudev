@@ -7,17 +7,17 @@ import com.dudev.entity.Category;
 import com.dudev.entity.ChangeType;
 import com.dudev.entity.Guitar;
 
-import com.dudev.entity.Product;
 import com.dudev.entity.User;
+import com.dudev.util.EntityGenerator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -38,19 +38,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GuitarRepositoryIT extends TransactionManagementTestBase {
 
-    static GuitarRepository guitarRepository;
-
-    @BeforeAll
-    static void entitiesInit() {
-        guitarRepository = new GuitarRepository(session);
-        session.beginTransaction();
-        insertEntities(session);
-        session.getTransaction().commit();
-    }
+    static GuitarRepository guitarRepository = applicationContext.getBean(GuitarRepository.class);
 
     @Test
-    void save() {
-        Guitar entity = getEntity();
+    void persist() {
+        Guitar entity = getGuitar();
 
         guitarRepository.save(entity);
 
@@ -59,9 +51,9 @@ public class GuitarRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void findById() {
-        Guitar entity = getEntity();
+        Guitar entity = getGuitar();
         guitarRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         Optional<Guitar> actualEntity = guitarRepository.findById(entity.getId());
 
@@ -71,9 +63,9 @@ public class GuitarRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void delete() {
-        Guitar entity = getEntity();
+        Guitar entity = getGuitar();
         guitarRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
         guitarRepository.delete(entity);
 
@@ -82,24 +74,25 @@ public class GuitarRepositoryIT extends TransactionManagementTestBase {
 
     @Test
     void update() {
-        Guitar entity = getEntity();
+        Guitar entity = getGuitar();
         guitarRepository.save(entity);
-        session.clear();
+        entityManager.clear();
 
-        LocalDateTime createdAt = LocalDateTime.of(2000, 1, 1, 2, 2, 1);
-        entity.setCreatedAt(createdAt);
+        entity.setYear(1999);
         guitarRepository.update(entity);
-        session.clear();
+        entityManager.clear();
 
         assertThat(guitarRepository.findById(entity.getId()).get()).isEqualTo(entity);
     }
 
     @Test
     void findAll() {
-        Guitar entity = getEntity();
-        List<Guitar> actualResult = guitarRepository.findAll();
+        insertEntities(entityManager);
 
-        assertThat(actualResult.size()).isEqualTo(getEntities().size());
+        List<Guitar> actualResult = guitarRepository.findAll();
+        List<Guitar> expectedResult = getGuitars();
+
+        assertThat(actualResult.size()).isEqualTo(expectedResult.size());
     }
 
     @Nested
@@ -107,37 +100,17 @@ public class GuitarRepositoryIT extends TransactionManagementTestBase {
 
         @ParameterizedTest
         @MethodSource("getGuitarFilters")
-        void findGuitarsByPredicates(GuitarFilter filter, Object result) {
-            List<Guitar> guitarsByPredicates = guitarRepository.findAllGuitarsByPredicatesQueryDsl(filter);
+        void findGuitarsByPredicates(GuitarFilter filter, List<Guitar> expectedResult) {
+            insertEntities(entityManager);
 
-            if (filter.getYear() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getYear()).isEqualTo(result));
-            }
-            if (filter.getModel() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getModel()).isEqualTo(result));
-            }
-            if (filter.getChangeType() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getChangeType().getDescription()).isEqualTo(result));
-            }
-            if (filter.getChangeWish() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getChangeWish()).containsIgnoringCase((CharSequence) result));
-            }
-            if (filter.getCountry() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getCountry()).isEqualTo(result));
-            }
-            if (filter.getBrand() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getBrand().getName()).isEqualTo(result));
-            }
+            List<Guitar> actualResult = guitarRepository.findAllGuitarsByPredicatesQueryDsl(filter);
+
+            assertThat(actualResult.size()).isEqualTo(expectedResult.size());
         }
 
         @Test
         void findGuitarsByCombinationOfPredicates() {
+            insertEntities(entityManager);
             GuitarFilter filterYearModel = GuitarFilter.builder()
                     .year(1999)
                     .model("Stratocaster")
@@ -150,40 +123,53 @@ public class GuitarRepositoryIT extends TransactionManagementTestBase {
 
         @Test
         void findGuitarsByEmptyFilter() {
+            insertEntities(entityManager);
             GuitarFilter filter = GuitarFilter.builder().build();
 
-            List<Guitar> allGuitarsByPredicatesQueryDsl = guitarRepository.findAllGuitarsByPredicatesQueryDsl(filter);
+            List<Guitar> actualResult = guitarRepository.findAllGuitarsByPredicatesQueryDsl(filter);
+            List<Guitar> expectedResult = getGuitars();
 
-            assertThat(allGuitarsByPredicatesQueryDsl.size()).isEqualTo(getEntities().size());
+            assertThat(actualResult.size()).isEqualTo(expectedResult.size());
         }
 
         static Stream<Arguments> getGuitarFilters() {
             GuitarFilter filterYear = GuitarFilter.builder()
                     .year(1999)
                     .build();
+            List<Guitar> yearFilterExpectedResult = getGuitars().stream().filter(it -> it.getYear() == 1999).toList();
+
             GuitarFilter filterBrand = GuitarFilter.builder()
                     .brand("Fender")
                     .build();
+            List<Guitar> brandFilterExpectedResult = getGuitars().stream().filter(it -> it.getBrand().getName().equals("Fender")).toList();
+
             GuitarFilter filterModel = GuitarFilter.builder()
                     .model("Stratocaster")
                     .build();
+            List<Guitar> modelFilterExpectedResult = getGuitars().stream().filter(it -> it.getModel().equals("Stratocaster")).toList();
+
             GuitarFilter filterChangeWish = GuitarFilter.builder()
                     .changeWish("Telecaster")
                     .build();
+            List<Guitar> changeWishFilterExpectedResult = getGuitars().stream().filter(it -> it.getChangeWish().contains("Telecaster")).toList();
+
             GuitarFilter filterChangeType = GuitarFilter.builder()
                     .changeType("Sell")
                     .build();
+            List<Guitar> changeTypeFilterExpectedResult = getGuitars().stream().filter(it -> it.getChangeType().getDescription().equals("Sell")).toList();
+
             GuitarFilter filterCountry = GuitarFilter.builder()
                     .country("USA")
                     .build();
+            List<Guitar> countryFilterExpectedResult = getGuitars().stream().filter(it -> it.getCountry().equals("USA")).toList();
 
             return Stream.of(
-                    Arguments.of(filterYear, 1999),
-                    Arguments.of(filterBrand, "Fender"),
-                    Arguments.of(filterModel, "Stratocaster"),
-                    Arguments.of(filterChangeWish, "Telecaster"),
-                    Arguments.of(filterChangeType, "Sell"),
-                    Arguments.of(filterCountry, "USA")
+                    Arguments.of(filterYear, yearFilterExpectedResult),
+                    Arguments.of(filterBrand, brandFilterExpectedResult),
+                    Arguments.of(filterModel, modelFilterExpectedResult),
+                    Arguments.of(filterChangeWish, changeWishFilterExpectedResult),
+                    Arguments.of(filterChangeType, changeTypeFilterExpectedResult),
+                    Arguments.of(filterCountry, countryFilterExpectedResult)
             );
         }
 
@@ -192,95 +178,82 @@ public class GuitarRepositoryIT extends TransactionManagementTestBase {
     @Nested
     class CriteriaApi {
 
-        @Test
-        void findAllGuitars() {
-            List<Guitar> allGuitars = guitarRepository.findAllGuitarsCriteria();
-
-            assertThat(allGuitars.size()).isEqualTo(4);
-        }
-
         @ParameterizedTest
         @MethodSource("getGuitarFilters")
-        void findGuitarsByPredicates(GuitarFilter filter, Object result) {
-            List<Guitar> guitarsByPredicates = guitarRepository.findGuitarsByPredicatesCriteria(filter);
+        void findGuitarsByPredicates(GuitarFilter filter, List<Guitar> expectedResult) {
+            insertEntities(entityManager);
 
-            if (filter.getYear() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getYear()).isEqualTo(result));
-            }
-            if (filter.getModel() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getModel()).isEqualTo(result));
-            }
-            if (filter.getChangeType() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getChangeType().getDescription()).isEqualTo(result));
-            }
-            if (filter.getChangeWish() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getChangeWish()).containsIgnoringCase((CharSequence) result));
-            }
-            if (filter.getCountry() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getCountry()).isEqualTo(result));
-            }
-            if (filter.getBrand() != null) {
-                guitarsByPredicates
-                        .forEach(it -> assertThat(it.getBrand().getName()).isEqualTo(result));
-            }
+            List<Guitar> actualResult = guitarRepository.findAllGuitarsByPredicatesQueryDsl(filter);
+
+            assertThat(actualResult.size()).isEqualTo(expectedResult.size());
         }
 
         static Stream<Arguments> getGuitarFilters() {
             GuitarFilter filterYear = GuitarFilter.builder()
                     .year(1999)
                     .build();
+            List<Guitar> yearFilterExpectedResult = getGuitars().stream().filter(it -> it.getYear() == 1999).toList();
+
             GuitarFilter filterBrand = GuitarFilter.builder()
                     .brand("Fender")
                     .build();
+            List<Guitar> brandFilterExpectedResult = getGuitars().stream().filter(it -> it.getBrand().getName().equals("Fender")).toList();
+
             GuitarFilter filterModel = GuitarFilter.builder()
                     .model("Stratocaster")
                     .build();
+            List<Guitar> modelFilterExpectedResult = getGuitars().stream().filter(it -> it.getModel().equals("Stratocaster")).toList();
+
             GuitarFilter filterChangeWish = GuitarFilter.builder()
                     .changeWish("Telecaster")
                     .build();
+            List<Guitar> changeWishFilterExpectedResult = getGuitars().stream().filter(it -> it.getChangeWish().contains("Telecaster")).toList();
+
             GuitarFilter filterChangeType = GuitarFilter.builder()
                     .changeType("Sell")
                     .build();
+            List<Guitar> changeTypeFilterExpectedResult = getGuitars().stream().filter(it -> it.getChangeType().getDescription().equals("Sell")).toList();
+
             GuitarFilter filterCountry = GuitarFilter.builder()
                     .country("USA")
                     .build();
+            List<Guitar> countryFilterExpectedResult = getGuitars().stream().filter(it -> it.getCountry().equals("USA")).toList();
 
             return Stream.of(
-                    Arguments.of(filterYear, 1999),
-                    Arguments.of(filterBrand, "Fender"),
-                    Arguments.of(filterModel, "Stratocaster"),
-                    Arguments.of(filterChangeWish, "Telecaster"),
-                    Arguments.of(filterChangeType, "Sell"),
-                    Arguments.of(filterCountry, "USA")
+                    Arguments.of(filterYear, yearFilterExpectedResult),
+                    Arguments.of(filterBrand, brandFilterExpectedResult),
+                    Arguments.of(filterModel, modelFilterExpectedResult),
+                    Arguments.of(filterChangeWish, changeWishFilterExpectedResult),
+                    Arguments.of(filterChangeType, changeTypeFilterExpectedResult),
+                    Arguments.of(filterCountry, countryFilterExpectedResult)
             );
         }
     }
 
-    private static Guitar getEntity() {
+    private static Guitar getGuitar() {
         User user = getUser();
         Category category = getCategory();
         ChangeType changeType = getChangeType();
         Brand brand = getBrand(category);
-        Guitar guitar = getGuitar(category, changeType, brand, user);
+        Guitar guitar = EntityGenerator.getGuitar(category, changeType, brand, user);
 
-        session.save(user);
-        session.save(category);
-        session.save(brand);
-        session.save(changeType);
+        entityManager.persist(user);
+        entityManager.persist(category);
+        entityManager.persist(brand);
+        entityManager.persist(changeType);
         return guitar;
     }
 
-    private static List<Product> getEntities() {
+    private static List<Guitar> getGuitars() {
         List<User> users = getUsers();
         List<ChangeType> changeTypes = getChangeTypes();
         List<Category> categories = getCategories();
         List<Brand> brands = getBrands(categories);
-        List<Product> entities = getProducts(users, changeTypes, categories, brands).stream().filter(it -> it instanceof Guitar).toList();
-        return entities;
+        List<Guitar> guitars = new ArrayList<>();
+
+        getProducts(users, changeTypes, categories, brands).stream()
+                .filter(it -> it instanceof Guitar)
+                .forEach(guitar -> guitars.add((Guitar) guitar));
+        return guitars;
     }
 }

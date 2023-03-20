@@ -14,6 +14,7 @@ import com.dudev.entity.User;
 import com.dudev.entity.UserLikedProduct;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.Configuration;
 
