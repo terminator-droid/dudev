@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 
+import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import java.lang.reflect.Proxy;
 
@@ -30,5 +31,10 @@ public class RepositoryConfiguration {
     EntityManager entityManager(SessionFactory sessionFactory) {
         return (EntityManager) Proxy.newProxyInstance(sessionFactory.getClass().getClassLoader(), new Class[]{Session.class},
                 (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
+    }
+
+    @PreDestroy
+    void destroy() {
+        sessionFactory(configuration()).close();
     }
 }
