@@ -1,27 +1,28 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.IT;
+import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.ChangeType;
 import com.dudev.entity.Offer;
 import com.dudev.entity.User;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import static com.dudev.entity.Role.USER;
 import static com.dudev.util.EntityGenerator.getChangeType;
 import static com.dudev.util.EntityGenerator.getOffer;
 import static com.dudev.util.EntityGenerator.getUser;
-import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class OfferRepositoryIT extends TransactionManagementTestBase {
+@RequiredArgsConstructor
+class OfferRepositoryIT extends IntegrationTestBase {
 
-    static OfferRepository offerRepository = applicationContext.getBean(OfferRepository.class);
+    private final OfferRepository offerRepository;
+    private final EntityManager entityManager;
 
     @Test
     void save() {

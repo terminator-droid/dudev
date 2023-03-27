@@ -17,24 +17,24 @@ import java.lang.reflect.Proxy;
 @ComponentScan(basePackages = "com.dudev.dao")
 public class RepositoryConfiguration {
 
-    @Bean
-    org.hibernate.cfg.Configuration configuration() {
-        return HibernateUtil.buildConfiguration();
-    }
-
-    @Bean
-    SessionFactory sessionFactory(org.hibernate.cfg.Configuration configuration) {
-        return configuration.buildSessionFactory();
-    }
-
-    @Bean
-    EntityManager entityManager(SessionFactory sessionFactory) {
-        return (EntityManager) Proxy.newProxyInstance(sessionFactory.getClass().getClassLoader(), new Class[]{Session.class},
-                (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
-    }
-
-    @PreDestroy
-    void destroy() {
-        sessionFactory(configuration()).close();
-    }
+//    @Bean
+//    org.hibernate.cfg.Configuration configuration() {
+//        return HibernateUtil.buildConfiguration();
+//    }
+//
+//    @Bean
+//    SessionFactory sessionFactory(org.hibernate.cfg.Configuration configuration) {
+//        return configuration.buildSessionFactory();
+//    }
+//
+//    @Bean
+//    EntityManager entityManager(SessionFactory sessionFactory) {
+//        return (EntityManager) Proxy.newProxyInstance(sessionFactory.getClass().getClassLoader(), new Class[]{Session.class},
+//                (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
+//    }
+//
+//    @PreDestroy
+//    void destroy() {
+//        sessionFactory(configuration()).close();
+//    }
 }

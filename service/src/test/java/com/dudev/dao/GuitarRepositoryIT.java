@@ -1,6 +1,7 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.IT;
+import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.dto.GuitarFilter;
 import com.dudev.entity.Brand;
 import com.dudev.entity.Category;
@@ -9,14 +10,14 @@ import com.dudev.entity.Guitar;
 
 import com.dudev.entity.User;
 import com.dudev.util.EntityGenerator;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.time.LocalDateTime;
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,17 +29,17 @@ import static com.dudev.util.EntityGenerator.getCategories;
 import static com.dudev.util.EntityGenerator.getCategory;
 import static com.dudev.util.EntityGenerator.getChangeType;
 import static com.dudev.util.EntityGenerator.getChangeTypes;
-import static com.dudev.util.EntityGenerator.getGuitar;
 import static com.dudev.util.EntityGenerator.getProducts;
 import static com.dudev.util.EntityGenerator.getUser;
 import static com.dudev.util.EntityGenerator.getUsers;
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RequiredArgsConstructor
+public class GuitarRepositoryIT extends IntegrationTestBase {
 
-public class GuitarRepositoryIT extends TransactionManagementTestBase {
-
-    static GuitarRepository guitarRepository = applicationContext.getBean(GuitarRepository.class);
+    private final GuitarRepository guitarRepository;
+    private final EntityManager entityManager;
 
     @Test
     void persist() {
@@ -230,7 +231,7 @@ public class GuitarRepositoryIT extends TransactionManagementTestBase {
         }
     }
 
-    private static Guitar getGuitar() {
+    private Guitar getGuitar() {
         User user = getUser();
         Category category = getCategory();
         ChangeType changeType = getChangeType();

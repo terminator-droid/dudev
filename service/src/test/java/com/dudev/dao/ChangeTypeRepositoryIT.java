@@ -1,20 +1,24 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.IT;
+import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.ChangeType;
 import com.dudev.util.EntityGenerator;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ChangeTypeRepositoryIT extends TransactionManagementTestBase {
+@RequiredArgsConstructor
+class ChangeTypeRepositoryIT extends IntegrationTestBase {
 
-    static ChangeTypeRepository userRepository = applicationContext.getBean(ChangeTypeRepository.class);
+    private final ChangeTypeRepository userRepository;
+    private final EntityManager entityManager;
 
     @Test
     void save() {

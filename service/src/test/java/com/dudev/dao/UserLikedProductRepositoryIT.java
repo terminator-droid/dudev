@@ -1,23 +1,24 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.IT;
+import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.UserLikedProduct;
-import com.dudev.entity.UserLikedProduct;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static com.dudev.util.EntityGenerator.getUserLikedProduct;
-import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RequiredArgsConstructor
+class UserLikedProductRepositoryIT extends IntegrationTestBase {
 
-class UserLikedProductRepositoryIT extends TransactionManagementTestBase {
+    private final UserLikedProductRepository userLikedProductRepository;
 
-    static UserLikedProductRepository userLikedProductRepository = applicationContext.getBean(UserLikedProductRepository.class);
+    private final EntityManager entityManager;
 
     @Test
     void save() {

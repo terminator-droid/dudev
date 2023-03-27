@@ -6,6 +6,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/guitar_changer_frame_test
   jpa:
     hibernate:
-      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    properties.hibernate:
+        current_session_context_class: thread
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        format_sql: true
+        hbm2ddl.auto: update
+
+

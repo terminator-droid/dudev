@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Import;
 @Import(RepositoryConfiguration.class)
 public class TestRepositoryConfiguration {
 
-    @Bean
-    SessionFactory sessionFactory() {
-        return HibernateTestUtil.buildSessionFactory();
-    }
+//    @Bean
+//    SessionFactory sessionFactory() {
+//        return HibernateTestUtil.buildSessionFactory();
+//    }
 }

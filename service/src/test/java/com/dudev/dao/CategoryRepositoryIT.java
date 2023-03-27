@@ -1,20 +1,25 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.IT;
+import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.Category;
 import com.dudev.util.EntityGenerator;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RequiredArgsConstructor
+class CategoryRepositoryIT extends IntegrationTestBase {
 
-class CategoryRepositoryIT extends TransactionManagementTestBase {
+    private final CategoryRepository categoryRepository;
 
-    static CategoryRepository categoryRepository = applicationContext.getBean(CategoryRepository.class);
+    private final EntityManager entityManager;
 
     @Test
     void save() {

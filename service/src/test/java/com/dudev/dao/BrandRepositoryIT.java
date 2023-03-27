@@ -1,11 +1,16 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.IT;
+import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.Brand;
 import com.dudev.entity.Category;
 import com.dudev.util.EntityGenerator;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.TestConstructor;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +19,13 @@ import static com.dudev.util.EntityGenerator.getCategory;
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class BrandRepositoryIT extends TransactionManagementTestBase {
 
-    static BrandRepository brandRepository = new BrandRepository(entityManager);
+@RequiredArgsConstructor
+class BrandRepositoryIT extends IntegrationTestBase{
+
+    private final BrandRepository brandRepository;
+
+    private final EntityManager entityManager;
 
     @Test
     void save() {

@@ -1,20 +1,24 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.IT;
 import com.dudev.entity.User;
 import com.dudev.entity.Role;
 import com.dudev.util.EntityGenerator;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 import static com.dudev.util.EntityUtil.insertEntities;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserRepositoryIT extends TransactionManagementTestBase {
+@RequiredArgsConstructor
+public class UserRepositoryIT {
 
-    static UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+    private final UserRepository userRepository;
+    private final EntityManager entityManager;
 
     @Test
     void save() {

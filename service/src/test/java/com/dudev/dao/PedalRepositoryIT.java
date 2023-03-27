@@ -1,17 +1,18 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.TransactionManagementTestBase;
+import com.dudev.basetest.IT;
+import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.Brand;
 import com.dudev.entity.Category;
 import com.dudev.entity.ChangeType;
 import com.dudev.entity.Guitar;
 import com.dudev.entity.Pedal;
-import com.dudev.entity.Product;
 import com.dudev.entity.User;
 import com.dudev.util.EntityGenerator;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +24,17 @@ import static com.dudev.util.EntityGenerator.getCategories;
 import static com.dudev.util.EntityGenerator.getCategory;
 import static com.dudev.util.EntityGenerator.getChangeType;
 import static com.dudev.util.EntityGenerator.getChangeTypes;
-import static com.dudev.util.EntityGenerator.getPedal;
 import static com.dudev.util.EntityGenerator.getProducts;
 import static com.dudev.util.EntityGenerator.getUser;
 import static com.dudev.util.EntityGenerator.getUsers;
 import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PedalRepositoryIT extends TransactionManagementTestBase {
+@RequiredArgsConstructor
+class PedalRepositoryIT extends IntegrationTestBase {
 
-    static PedalRepository pedalRepository = applicationContext.getBean(PedalRepository.class);
+    private final PedalRepository pedalRepository;
+    private final EntityManager entityManager;
 
     @Test
     void save() {
@@ -90,7 +92,7 @@ class PedalRepositoryIT extends TransactionManagementTestBase {
         assertThat(actualResult.size()).isEqualTo(getPedals().size());
     }
 
-    private static Pedal getPedal() {
+    private Pedal getPedal() {
         User user = getUser();
         Category category = getCategory();
         ChangeType changeType = getChangeType();
