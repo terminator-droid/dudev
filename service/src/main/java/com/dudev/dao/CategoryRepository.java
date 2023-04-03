@@ -1,15 +1,8 @@
 package com.dudev.dao;
 
 import com.dudev.entity.Category;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
 
-@Repository
-public class CategoryRepository extends RepositoryBase<Integer, Category> {
-
-    public CategoryRepository(EntityManager entityManager) {
-        super(entityManager, Category.class);
-    }
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
 }

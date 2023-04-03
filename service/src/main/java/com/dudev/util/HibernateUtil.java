@@ -1,6 +1,5 @@
 package com.dudev.util;
 
-import com.dudev.entity.Audit;
 import com.dudev.entity.Brand;
 import com.dudev.entity.Category;
 import com.dudev.entity.ChangeType;
@@ -14,7 +13,6 @@ import com.dudev.entity.User;
 import com.dudev.entity.UserLikedProduct;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.Configuration;
 
@@ -40,7 +38,6 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Product.class);
         configuration.addAnnotatedClass(UserLikedProduct.class);
         configuration.addAnnotatedClass(OfferProduct.class);
-        configuration.addAnnotatedClass(Audit.class);
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         return configuration;
     }

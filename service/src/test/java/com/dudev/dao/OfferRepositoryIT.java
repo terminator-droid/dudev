@@ -1,6 +1,5 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.IT;
 import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.ChangeType;
 import com.dudev.entity.Offer;
@@ -45,24 +44,6 @@ class OfferRepositoryIT extends IntegrationTestBase {
         assertThat(actualEntity.get()).isEqualTo(entity);
     }
 
-    private Offer getEntity() {
-        ChangeType changeType = getChangeType();
-        User buyer = getUser();
-        User seller = User.builder()
-                .username("Gosling333")
-                .role(USER)
-                .fullName("Ryan Gosling")
-                .password("second_password")
-                .phoneNumber("8920-122-22-23")
-                .build();
-        Offer offer = getOffer(buyer, seller, changeType);
-
-        entityManager.persist(seller);
-        entityManager.persist(buyer);
-        entityManager.persist(changeType);
-        return offer;
-    }
-
     @Test
     void delete() {
         Offer entity = getEntity();
@@ -82,9 +63,28 @@ class OfferRepositoryIT extends IntegrationTestBase {
 
         LocalDateTime createdAt = LocalDateTime.of(2000, 1, 1, 2, 2, 1);
         entity.setCreatedAt(createdAt);
-        offerRepository.update(entity);
+        offerRepository.save(entity);
+        entityManager.flush();
         entityManager.clear();
 
         assertThat(offerRepository.findById(entity.getId()).get()).isEqualTo(entity);
+    }
+
+    private Offer getEntity() {
+        ChangeType changeType = getChangeType();
+        User buyer = getUser();
+        User seller = User.builder()
+                .username("Gosling333")
+                .role(USER)
+                .fullName("Ryan Gosling")
+                .password("second_password")
+                .phoneNumber("8920-122-22-23")
+                .build();
+        Offer offer = getOffer(buyer, seller, changeType);
+
+        entityManager.persist(seller);
+        entityManager.persist(buyer);
+        entityManager.persist(changeType);
+        return offer;
     }
 }

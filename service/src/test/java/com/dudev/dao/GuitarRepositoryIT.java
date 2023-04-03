@@ -1,13 +1,11 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.IT;
 import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.dto.GuitarFilter;
 import com.dudev.entity.Brand;
 import com.dudev.entity.Category;
 import com.dudev.entity.ChangeType;
 import com.dudev.entity.Guitar;
-
 import com.dudev.entity.User;
 import com.dudev.util.EntityGenerator;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +78,8 @@ public class GuitarRepositoryIT extends IntegrationTestBase {
         entityManager.clear();
 
         entity.setYear(1999);
-        guitarRepository.update(entity);
+        guitarRepository.save(entity);
+        entityManager.flush();
         entityManager.clear();
 
         assertThat(guitarRepository.findById(entity.getId()).get()).isEqualTo(entity);

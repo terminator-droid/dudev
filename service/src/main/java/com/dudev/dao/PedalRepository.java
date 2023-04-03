@@ -1,14 +1,7 @@
 package com.dudev.dao;
 
 import com.dudev.entity.Pedal;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
-
-@Repository
-public class PedalRepository extends RepositoryBase<Integer, Pedal> {
-
-    public PedalRepository(EntityManager entityManager) {
-        super(entityManager, Pedal.class);
-    }
+public interface PedalRepository extends JpaRepository<Pedal, Integer> {
 }
