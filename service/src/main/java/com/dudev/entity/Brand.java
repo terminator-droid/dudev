@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,9 +18,9 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "category")
-@Builder
 @Entity
 @Table(name = "brand")
+@SuperBuilder
 public class Brand extends BaseEntity<Integer> {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

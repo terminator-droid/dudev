@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +22,8 @@ import java.util.List;
 @Entity
 @Table(name = "pedal", schema = "public")
 @PrimaryKeyJoinColumn(name = "id")
-public class Pedal extends Product{
+@SuperBuilder
+public class Pedal extends Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +32,5 @@ public class Pedal extends Product{
     @Column(nullable = false)
     private String model;
 
-    private String shopPrice;
-
-    @Builder(builderMethodName = "pedalBuilder")
-    public Pedal(Category category, Brand brand, ChangeType changeType, double changeValue, String changeWish, User user, String media, LocalDateTime timestamp, double price, boolean closed, String description, List<UserLikedProduct> userLikedProducts, List<OfferProduct> offerProducts, Integer id, String model, String shopPrice) {
-        super(category, brand, changeType, changeValue, changeWish, user, media, timestamp, price, closed, description, userLikedProducts, offerProducts);
-        this.id = id;
-        this.model = model;
-        this.shopPrice = shopPrice;
-    }
+    private Double shopPrice;
 }

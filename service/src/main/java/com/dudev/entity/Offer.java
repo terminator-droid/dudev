@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -20,7 +22,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString(exclude = "offerProducts")
 @EqualsAndHashCode(exclude = "offerProducts")
 @Entity
@@ -43,10 +45,10 @@ public class Offer extends BaseEntity<Integer> {
     @OneToMany(mappedBy = "offer")
     private List<OfferProduct> offerProducts = new ArrayList<>();
 
-    private double changeValue;
+    private Double changeValue;
+
     @Column(nullable = false)
-    private LocalDateTime timestamp;
-    private boolean accepted;
+    private Boolean accepted;
 
 
 }
