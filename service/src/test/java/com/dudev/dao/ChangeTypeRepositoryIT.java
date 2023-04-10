@@ -1,6 +1,5 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.IT;
 import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.ChangeType;
 import com.dudev.util.EntityGenerator;
@@ -59,7 +58,8 @@ class ChangeTypeRepositoryIT extends IntegrationTestBase {
         entityManager.clear();
 
         entity.setDescription("Change");
-        userRepository.update(entity);
+        userRepository.save(entity);
+        entityManager.flush();
         entityManager.clear();
 
         assertThat(userRepository.findById(entity.getId()).get()).isEqualTo(entity);

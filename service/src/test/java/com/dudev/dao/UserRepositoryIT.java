@@ -1,8 +1,8 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.IT;
-import com.dudev.entity.User;
+import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.Role;
+import com.dudev.entity.User;
 import com.dudev.util.EntityGenerator;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static com.dudev.util.EntityUtil.insertEntities;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
-public class UserRepositoryIT {
+public class UserRepositoryIT extends IntegrationTestBase {
 
     private final UserRepository userRepository;
     private final EntityManager entityManager;
@@ -59,7 +59,8 @@ public class UserRepositoryIT {
         entityManager.clear();
 
         entity.setUsername("Username123");
-        userRepository.update(entity);
+        userRepository.save(entity);
+        entityManager.flush();
         entityManager.clear();
 
         assertThat(userRepository.findById(entity.getId()).get()).isEqualTo(entity);
@@ -85,6 +86,7 @@ public class UserRepositoryIT {
 
     @Test
     void findLimitedUsersOrderedByFullName() {
+        insertEntities(entityManager);
         int limit = 3;
 
         List<User> users = userRepository.findLimitedUsersOrderedByFullName(limit);
@@ -93,14 +95,10 @@ public class UserRepositoryIT {
     }
 
     private User getUser() {
-        User user = EntityGenerator.getUser();
-
-        return user;
+        return EntityGenerator.getUser();
     }
 
     private List<User> getUsers() {
-        List<User> users = EntityGenerator.getUsers();
-
-        return users;
+        return EntityGenerator.getUsers();
     }
 }

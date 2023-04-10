@@ -1,6 +1,5 @@
 package com.dudev.dao;
 
-import com.dudev.basetest.IT;
 import com.dudev.basetest.IntegrationTestBase;
 import com.dudev.entity.Category;
 import com.dudev.util.EntityGenerator;
@@ -60,7 +59,8 @@ class CategoryRepositoryIT extends IntegrationTestBase {
         entityManager.clear();
 
         entity.setName("pedal");
-        categoryRepository.update(entity);
+        categoryRepository.save(entity);
+        entityManager.flush();
         entityManager.clear();
 
         assertThat(categoryRepository.findById(entity.getId()).get()).isEqualTo(entity);

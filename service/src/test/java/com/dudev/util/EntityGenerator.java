@@ -13,7 +13,6 @@ import com.dudev.entity.User;
 import com.dudev.entity.UserLikedProduct;
 import lombok.experimental.UtilityClass;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.dudev.entity.Role.ADMIN;
@@ -60,7 +59,6 @@ public class EntityGenerator {
                 .price(2000)
                 .user(user)
                 .closed(false)
-                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
@@ -74,7 +72,6 @@ public class EntityGenerator {
                 .price(2000)
                 .user(user)
                 .closed(false)
-                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
@@ -87,7 +84,6 @@ public class EntityGenerator {
                 .price(2000)
                 .user(user)
                 .closed(false)
-                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
@@ -97,19 +93,20 @@ public class EntityGenerator {
                 .seller(seller)
                 .changeType(changeType)
                 .accepted(false)
-                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
                 .build();
     }
 
-    public static OfferProduct getOfferProduct() {
+    public static OfferProduct getOfferProduct(Offer offer, Product product) {
         return OfferProduct.builder()
-                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
+                .offer(offer)
+                .product(product)
                 .build();
     }
 
-    public static UserLikedProduct getUserLikedProduct() {
+    public static UserLikedProduct getUserLikedProduct(User user, Product product) {
         return UserLikedProduct.builder()
-                .createdAt(LocalDateTime.of(2022, 2, 1, 0, 0))
+                .user(user)
+                .product(product)
                 .build();
     }
 
@@ -208,7 +205,6 @@ public class EntityGenerator {
                                             List<Category> categories,
                                             List<Brand> brands) {
         Guitar guitar1 = Guitar.builder()
-                .createdAt(LocalDateTime.now())
                 .user(users.get(0))
                 .price(40000)
                 .description("Good guitar")
@@ -225,7 +221,6 @@ public class EntityGenerator {
                 .closed(false)
                 .build();
         Guitar guitar2 = Guitar.builder()
-                .createdAt(LocalDateTime.now())
                 .user(users.get(1))
                 .price(5000)
                 .description("Good guitar really")
@@ -243,7 +238,6 @@ public class EntityGenerator {
                 .build();
 
         Guitar guitar3 = Guitar.builder()
-                .createdAt(LocalDateTime.now())
                 .user(users.get(2))
                 .price(40000)
                 .description("Broken")
@@ -261,7 +255,6 @@ public class EntityGenerator {
                 .build();
 
         Guitar guitar4 = Guitar.builder()
-                .createdAt(LocalDateTime.now())
                 .user(users.get(3))
                 .price(40000)
                 .description("Good")
@@ -278,7 +271,6 @@ public class EntityGenerator {
                 .closed(false)
                 .build();
         Pedal pedal = Pedal.builder()
-                .createdAt(LocalDateTime.now())
                 .user(users.get(3))
                 .price(40000)
                 .description("Good")
