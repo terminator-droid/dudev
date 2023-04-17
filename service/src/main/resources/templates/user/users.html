@@ -5,8 +5,18 @@
     <title>Users</title>
 </head>
 <body>
+
+<form action="/users">
+    <label for="username">Username
+        <input id="username" type="text" name="username">
+    </label>
+    <label for="fullName">Full Name
+        <input id="fullName" type="text" name="fullName">
+    </label>
+    <button type="submit">Filter</button>
+</form>
     <div th:each="user : ${users}">
-        <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.username}|"></a>
+        <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.username}|">User</a>
     </div>
 </body>
 </html>

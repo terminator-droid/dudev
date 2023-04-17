@@ -3,6 +3,7 @@ package com.dudev.dto;
 import com.dudev.entity.Role;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
+import org.springframework.web.multipart.MultipartFile;
 
 @Value
 @FieldNameConstants
@@ -14,4 +15,5 @@ public class UserCreateEditDto {
     String phoneNumber;
     String password;
     String address;
+    MultipartFile image;
 }

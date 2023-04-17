@@ -12,4 +12,5 @@ public class UserReadDto {
     Role role;
     String phoneNumber;
     String address;
+    String image;
 }
