@@ -2,7 +2,10 @@ package com.dudev.mapper;
 
 import com.dudev.dto.UserCreateEditDto;
 import com.dudev.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -10,7 +13,10 @@ import java.util.Optional;
 import static java.util.function.Predicate.not;
 
 @Component
+@RequiredArgsConstructor
 public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User map(UserCreateEditDto fromObject, User toObject) {
@@ -25,7 +31,7 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
         return user;
     }
 
-    private static void copy(UserCreateEditDto object, User user) {
+    private void copy(UserCreateEditDto object, User user) {
         if (object.getUsername() != null) {
             user.setUsername(object.getUsername());
         }
@@ -35,9 +41,12 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
         if (object.getAddress() != null) {
             user.setAddress(object.getAddress());
         }
-        if (object.getPassword() != null) {
-            user.setPassword(object.getPassword());
-        }
+
+        Optional.ofNullable(object.getRawPassword())
+                .filter(StringUtils::hasText)
+                .map(passwordEncoder::encode)
+                .ifPresent(user::setPassword);
+
         if (object.getFullName() != null) {
             user.setFullName(object.getFullName());
         }

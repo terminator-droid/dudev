@@ -6,39 +6,46 @@ import com.dudev.dto.UserReadDto;
 import com.dudev.entity.User;
 import com.dudev.mapper.UserCreateEditMapper;
 import com.dudev.mapper.UserReadMapper;
+import com.dudev.repository.QPredicate;
 import com.dudev.repository.UserRepository;
+import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static com.dudev.entity.QUser.user;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserReadMapper userReadMapper;
     private final UserCreateEditMapper userCreateEditMapper;
     private final ImageService imageService;
 
-//    public List<UserReadDto> findAll(UserFilter filter, Pageable pageable) {
-//        Predicate predicate = QPredicate.builder()
-//                .add(filter.username(), user.username::containsIgnoreCase)
-//                .add(filter.fullName(), user.fullName::containsIgnoreCase)
-//                .buildAnd();
-//
-//        userRepository.findAll(predicate, pageable);
-//
-//        return userRepository.findAll(filter).stream()
-//                .map(userReadMapper::map)
-//                .toList();
-//    }
+    public Page<UserReadDto> findAll(UserFilter filter, Pageable pageable) {
+        Predicate predicate = QPredicate.builder()
+                .add(filter.username(), user.username::containsIgnoreCase)
+                .add(filter.fullName(), user.fullName::containsIgnoreCase)
+                .buildAnd();
+
+        return userRepository.findAll(predicate, pageable)
+                .map(userReadMapper::map);
+    }
 
     public Optional<byte[]> findAvatar(Integer id) {
         return userRepository.findById(id)
@@ -105,5 +112,16 @@ public class UserService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .map(user -> new org.springframework.security.core.userdetails.User(
+                        user.getUsername(),
+                        user.getPassword(),
+                        Collections.singleton(user.getRole())
+                ))
+                .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user" + username));
     }
 }

@@ -5,33 +5,33 @@
     <title>Registration</title>
 </head>
 <body>
-<form action="/users" enctype="multipart/form-data" method="post">
+<form th:action="@{/users}" enctype="multipart/form-data" method="post">
     <label for="username">Username
         <input id="username" type="text" name="username" th:value="${user.username}">
     </label><br>
     <label for="fullname">FullName
         <input id="fullname" type="text" name="fullName" th:value="${user.fullName}">
-    </label>
-    <label for="phoneNumber">FullName
+    </label><br>
+    <label for="phoneNumber">Phone number
         <input id="phoneNumber" type="text" name="phoneNumber" th:value="${user.phoneNumber}">
-    </label>
-    <label for="password">FullName
-        <input id="password" type="password" name="password" th:value="${user.password}">
-    </label>
-    <label for="address">FullName
+    </label><br>
+    <label for="rawPassword">Password
+        <input id="rawPassword" type="password" name="rawPassword" >
+    </label><br>
+    <label for="address">Address
         <input id="address" type="text" name="address" th:value="${user.address}">
-    </label>
+    </label><br>
     <div th:each="role : ${roles}">
         <input th:id="${role}" name="role" type="radio" th:value="${role}" th:checked="${user.role == role}">
         <label th:for="${role}" th:text="${role}">Role name</label>
-    </div>
+    </div><br>
     <label for="image">Image
         <input id="image" type="file" name="image">
-    </label>
+    </label><br>
     <button type="submit">Submit</button>
 </form>
 <div th:if="${errors}">
-    <p th:each="error: ${errors}" th:text="${error.getDefaultMessage}">Error message</p>
+    <p style="color: red" th:each="error: ${errors}" th:text="${error.getDefaultMessage}">Error message</p>
 </div>
 </body>
 </html>

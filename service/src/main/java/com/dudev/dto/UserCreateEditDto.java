@@ -5,15 +5,22 @@ import lombok.Value;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 @Value
 @FieldNameConstants
 public class UserCreateEditDto {
 
     String fullName;
+    @Email(groups = {CreateAction.class, UpdateAction.class})
     String username;
     Role role;
     String phoneNumber;
-    String password;
+
+    @NotBlank(groups = {CreateAction.class})
+    String rawPassword;
+
     String address;
     MultipartFile image;
 }
