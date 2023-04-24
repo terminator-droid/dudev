@@ -3,6 +3,11 @@ package com.dudev.mapper;
 import com.dudev.dto.UserCreateEditDto;
 import com.dudev.entity.User;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
+
+import static java.util.function.Predicate.not;
 
 @Component
 public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
@@ -21,11 +26,27 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
     }
 
     private static void copy(UserCreateEditDto object, User user) {
-        user.setUsername(object.getUsername());
-        user.setRole(object.getRole());
-        user.setAddress(object.getAddress());
-        user.setPassword(object.getPassword());
-        user.setFullName(object.getFullName());
-        user.setPhoneNumber(object.getPhoneNumber());
+        if (object.getUsername() != null) {
+            user.setUsername(object.getUsername());
+        }
+        if (object.getRole() != null) {
+            user.setRole(object.getRole());
+        }
+        if (object.getAddress() != null) {
+            user.setAddress(object.getAddress());
+        }
+        if (object.getPassword() != null) {
+            user.setPassword(object.getPassword());
+        }
+        if (object.getFullName() != null) {
+            user.setFullName(object.getFullName());
+        }
+        if (object.getPhoneNumber() != null) {
+            user.setPhoneNumber(object.getPhoneNumber());
+        }
+
+        Optional.ofNullable(object.getImage())
+                .filter(not(MultipartFile::isEmpty))
+                .ifPresent(image -> user.setImage(image.getOriginalFilename()));
     }
 }

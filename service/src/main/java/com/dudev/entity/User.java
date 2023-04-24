@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,6 +54,8 @@ public class User extends BaseEntity<Integer> {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private String image;
 
     @Builder.Default
     @OneToMany(mappedBy = "user")

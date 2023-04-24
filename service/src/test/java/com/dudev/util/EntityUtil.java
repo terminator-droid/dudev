@@ -6,7 +6,6 @@ import com.dudev.entity.ChangeType;
 import com.dudev.entity.Product;
 import com.dudev.entity.User;
 import lombok.experimental.UtilityClass;
-import javax.persistence.EntityManager;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -40,7 +39,7 @@ public class EntityUtil {
         entityManager.flush();
     }
 
-    private static List<User> insertUsers(EntityManager entityManager) {
+    public static List<User> insertUsers(EntityManager entityManager) {
         List<User> users = getUsers();
 
         users.forEach(entityManager::persist);

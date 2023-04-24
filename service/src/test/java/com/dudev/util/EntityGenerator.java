@@ -162,7 +162,6 @@ public class EntityGenerator {
 
     public static List<User> getUsers() {
         User user1 = User.builder()
-                .id(1)
                 .phoneNumber("89283284834")
                 .username("Transformer111")
                 .role(Role.USER)
@@ -170,7 +169,6 @@ public class EntityGenerator {
                 .password("AutobotsAreTheBest2233")
                 .build();
         User user2 = User.builder()
-                .id(2)
                 .phoneNumber("891283284834")
                 .username("NightWatcher11")
                 .role(Role.USER)
@@ -178,7 +176,6 @@ public class EntityGenerator {
                 .password("ILoveDragons4Eva")
                 .build();
         User user3 = User.builder()
-                .id(3)
                 .phoneNumber("892282284834")
                 .username("Morty14")
                 .role(Role.USER)
@@ -186,7 +183,6 @@ public class EntityGenerator {
                 .password("Ricjasd")
                 .build();
         User user4 = User.builder()
-                .id(4)
                 .phoneNumber("89228124834")
                 .username("Pope")
                 .role(Role.USER)
@@ -194,7 +190,6 @@ public class EntityGenerator {
                 .password("fwef323ff")
                 .build();
         User user5 = User.builder()
-                .id(5)
                 .phoneNumber("892282125834")
                 .username("williamson")
                 .role(Role.USER)

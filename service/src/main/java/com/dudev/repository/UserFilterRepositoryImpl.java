@@ -1,12 +1,14 @@
 package com.dudev.repository;
 
+import com.dudev.dto.UserFilter;
 import com.dudev.entity.Role;
 import com.dudev.entity.User;
 import com.dudev.entity.User_;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQuery;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.graph.GraphSemantic;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -14,13 +16,26 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+import static com.dudev.entity.QUser.user;
 import static com.dudev.util.EntityGraphUtil.withUserProductsAndBrandsAndChangeTypes;
 
 @RequiredArgsConstructor
 public class UserFilterRepositoryImpl implements UserFilterRepository {
 
-    @Autowired
+
     private final EntityManager entityManager;
+
+    public List<User> findAll(UserFilter userFilter) {
+        Predicate predicate = QPredicate.builder()
+                .add(userFilter.username(), user.username::containsIgnoreCase)
+                .add(userFilter.fullName(), user.fullName::containsIgnoreCase)
+                .buildAnd();
+
+        return new JPAQuery<User>(entityManager)
+                .from(user)
+                .where(predicate)
+                .fetch();
+    }
 
     public List<User> findAllByRole(Role role) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
