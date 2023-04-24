@@ -1,10 +1,16 @@
 package com.dudev.http.controller;
 
+import com.dudev.dto.CreateAction;
+import com.dudev.dto.PageResponse;
+import com.dudev.dto.UpdateAction;
 import com.dudev.dto.UserCreateEditDto;
 import com.dudev.dto.UserFilter;
+import com.dudev.dto.UserReadDto;
 import com.dudev.entity.Role;
 import com.dudev.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,9 +38,10 @@ public class UserController {
     }
 
     @GetMapping
-    public String findAll(Model model, UserFilter filter) {
-
-        model.addAttribute("users", userService.findAll(filter));
+    public String findAll(Model model, UserFilter filter, Pageable pageable) {
+        Page<UserReadDto> page = userService.findAll(filter, pageable);
+        model.addAttribute("users", PageResponse.of(page));
+        model.addAttribute("filter", filter);
         return "user/users";
     }
 
@@ -49,21 +56,20 @@ public class UserController {
     }
 
     @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-    public String create(@Validated UserCreateEditDto userCreateEditDto,
+    public String create(@Validated(CreateAction.class) UserCreateEditDto userCreateEditDto,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addAttribute("user", userCreateEditDto);
-            redirectAttributes.addAttribute("errors", bindingResult.getAllErrors());
+            redirectAttributes.addFlashAttribute("user", userCreateEditDto);
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/users/registration";
         }
 
-        return "redirect:/users/" + userService.create(userCreateEditDto).getId();
+        return "redirect:/login";
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable Integer id, UserCreateEditDto userCreateEditDto) {
+    public String update(@PathVariable Integer id,@Validated(UpdateAction.class) UserCreateEditDto userCreateEditDto) {
         return userService.update(id, userCreateEditDto)
                 .map(it -> "redirect:/users/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

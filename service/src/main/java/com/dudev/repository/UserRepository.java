@@ -2,6 +2,13 @@ package com.dudev.repository;
 
 import com.dudev.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-public interface UserRepository extends JpaRepository<User, Integer>, UserFilterRepository {
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Integer>,
+        UserFilterRepository,
+        QuerydslPredicateExecutor<User>
+{
+    Optional<User> findByUsername(String username);
 }

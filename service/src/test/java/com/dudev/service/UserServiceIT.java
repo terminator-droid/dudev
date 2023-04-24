@@ -43,7 +43,7 @@ public class UserServiceIT extends IntegrationTestBase {
     @Test
     void create() {
         UserCreateEditDto userCreateEditDto = new UserCreateEditDto("Ivan Ivanov", "Mark123", Role.USER,
-                "234234", "pass", "addr");
+                "234234", "pass", "addr", null);
 
         UserReadDto actualResult = userService.create(userCreateEditDto);
 
@@ -58,7 +58,7 @@ public class UserServiceIT extends IntegrationTestBase {
     @Test
     void update() {
         UserCreateEditDto userCreateEditDto = new UserCreateEditDto("Ivan Ivanov", "Mark123", Role.USER,
-                "234234", "pass", "addr");
+                "234234", "pass", "addr", null);
         Optional<UserReadDto> actualResult = userService.update(USER_1, userCreateEditDto);
 
         assertThat(actualResult).isPresent();

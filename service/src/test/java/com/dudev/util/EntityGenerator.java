@@ -167,6 +167,7 @@ public class EntityGenerator {
                 .role(Role.USER)
                 .fullName("Optimus Prime")
                 .password("AutobotsAreTheBest2233")
+                .image("10-04-2021_21-21-09_2.jpg")
                 .build();
         User user2 = User.builder()
                 .phoneNumber("891283284834")

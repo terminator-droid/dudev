@@ -14,7 +14,6 @@ import static com.dudev.util.EntityGenerator.getBrands;
 import static com.dudev.util.EntityGenerator.getCategories;
 import static com.dudev.util.EntityGenerator.getChangeTypes;
 import static com.dudev.util.EntityGenerator.getProducts;
-import static com.dudev.util.EntityGenerator.getUsers;
 
 
 @UtilityClass
@@ -74,5 +73,9 @@ public class EntityUtil {
         entityManager.flush();
 
         return categories;
+    }
+
+    public static List<User> getUsers() {
+        return EntityGenerator.getUsers();
     }
 }
